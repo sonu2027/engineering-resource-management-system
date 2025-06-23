@@ -1,0 +1,1 @@
+export const DB_NAME='engineering-resource-management-system'
