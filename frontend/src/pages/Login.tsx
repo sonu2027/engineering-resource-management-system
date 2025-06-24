@@ -1,7 +1,9 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import Input from "../component/Input";
 import { useNavigate } from "react-router-dom";
+import loginUser from "../apiCall/loginUser";
+import toast from "react-hot-toast";
+import { useUser } from "../context/UseProvider";
 
 type LoginFormData = {
     email: string;
@@ -10,6 +12,7 @@ type LoginFormData = {
 
 const Login = () => {
     const navigate = useNavigate();
+    const { setUser } = useUser();
 
     const {
         register,
@@ -18,14 +21,21 @@ const Login = () => {
     } = useForm<LoginFormData>();
 
     const onSubmit = async (data: LoginFormData) => {
-        try {
-            const res = await axios.post("/api/auth/login", data);
-            alert("Login successful");
-            localStorage.setItem("token", res.data.token);
-        } catch (err) {
-            console.error(err);
-            alert("Login failed");
-        }
+        loginUser(data.email, data.password)
+            .then((res) => {
+                if (res.message === "Email not found")
+                    toast.error("Email not found")
+                else if (res.message === 'Incorrect password')
+                    toast.error("Incorrect password")
+                else {
+                    setUser(res.user);
+                    navigate("/home")
+                }
+            })
+            .catch((error) => {
+                console.log("error: ", error);
+                toast.error("Internal server error")
+            })
     };
 
     const handleForgotPassword = () => {

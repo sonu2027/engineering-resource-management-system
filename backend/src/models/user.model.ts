@@ -10,6 +10,7 @@ export interface IUser extends Document {
     seniority?: "junior" | "mid" | "senior";
     maxCapacity?: number;
     department?: string;
+    password: string;
 }
 
 // 2. Mongoose Schema
@@ -32,6 +33,10 @@ const UserSchema: Schema<IUser> = new Schema(
             enum: ["engineer", "manager"],
             required: true
         },
+        password: {
+            type: String,
+            required: true
+        },
 
         // Only for engineers
         employmentType: {
@@ -43,7 +48,6 @@ const UserSchema: Schema<IUser> = new Schema(
         },
         maxCapacity: {
             type: Number
-            // Will be auto-filled in pre-save
         },
         skills: {
             type: [String],
@@ -55,7 +59,17 @@ const UserSchema: Schema<IUser> = new Schema(
         },
         department: {
             type: String,
-            trim: true
+            trim: true,
+            enum: [
+                "frontend",
+                "backend",
+                "devOps",
+                "qa",
+                "ui/ux",
+                "ml",
+                "data engineering"
+            ]
+
         }
     },
     {

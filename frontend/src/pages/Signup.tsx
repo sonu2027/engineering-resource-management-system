@@ -1,60 +1,109 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Input from "../component/Input";
 import Select from "../component/Select";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import signupUser from "../apiCall/signupUser";
+import { sendEmailVerificationOTP } from "../apiCall/sendEmailVerificationOTP";
+import { useState } from "react";
+import OTPModal from "../component/OTPModal";
+import toast from "react-hot-toast";
 
 type SignupFormData = {
   name: string;
   email: string;
   role: "engineer" | "manager";
   employmentType?: "full-time" | "part-time";
-  skills?: string;
+  skills: string[]; // ✅ checkbox value as string[]
   seniority?: "junior" | "mid" | "senior";
   department?: string;
   password: string;
 };
+
+const skillOptions = [
+  "React",
+  "Node.js",
+  "Python",
+  "MongoDB",
+  "Django",
+  "Express",
+  "AWS",
+  "TypeScript"
+];
 
 const Signup = () => {
   const {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors }
   } = useForm<SignupFormData>({
     defaultValues: {
-      role: "engineer",
+      role: "manager",
       employmentType: "full-time",
-      seniority: "junior"
+      seniority: "junior",
+      skills: []
     }
   });
 
-  const navigate = useNavigate();
+  const [otp, setOtp] = useState<number>(0)
+  const [open, setOpen] = useState<boolean>(false);
 
+  const navigate = useNavigate();
   const selectedRole = watch("role");
 
   const onSubmit = async (data: SignupFormData) => {
-    try {
-      const payload = {
-        ...data,
-        maxCapacity: data.role === "engineer"
-          ? data.employmentType === "full-time"
-            ? 100
-            : 50
-          : 0,
-        skills: data.skills?.split(",").map((s) => s.trim()) || []
-      };
 
-      const res = await axios.post("/api/auth/signup", payload);
-      console.log(res);
-      
-      alert("Signup successful");
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      alert("Signup failed");
-    }
+    sendEmailVerificationOTP(data.email)
+      .then((res) => {
+        toast.success("OTP sent successfully")
+        console.log("res", res, typeof res);
+        setOtp(res)
+        setOpen(true)
+      })
+      .catch((error) => {
+        console.log("otp error: ", error);
+      })
   };
+
+  const handleSignup = (number: number) => {
+    const currentValues = watch();
+    console.log("On mount form values:", currentValues);
+
+    const payload = {
+      ...currentValues,
+      maxCapacity: currentValues.role === "engineer"
+        ? currentValues.employmentType === "full-time"
+          ? 100
+          : 50
+        : 0,
+      skills: currentValues.skills || []
+    };
+
+    console.log("payload: ", payload, number, typeof number, otp, typeof otp);
+
+
+    if (number === otp) {
+      signupUser(payload)
+        .then((res) => {
+          console.log("signup res: ", res);
+          toast.success("Account created successfully");
+          navigate("/login");
+        })
+        .catch((error) => {
+          if (error.message === 'User already exists')
+            toast.error("User already exists")
+          else if (error.message === "User creation failed")
+            toast.error("User creation failed")
+          console.log("Error is: ", error.message);
+          setOpen(false)
+        })
+    }
+    else {
+      toast.error("OTP doesn't match")
+      setOpen(false)
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-pink-100 pt-5">
@@ -65,23 +114,19 @@ const Signup = () => {
         <h2 className="text-3xl font-bold text-center text-indigo-700">Create Account</h2>
 
         <div className="space-y-4">
-          <div>
-            <Input
-              label="Name"
-              type="text"
-              {...register("name", { required: "Name is required" })}
-            />
-            {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
-          </div>
+          <Input
+            label="Name"
+            type="text"
+            {...register("name", { required: "Name is required" })}
+          />
+          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
 
-          <div>
-            <Input
-              label="Email"
-              type="email"
-              {...register("email", { required: "Email is required" })}
-            />
-            {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
-          </div>
+          <Input
+            label="Email"
+            type="email"
+            {...register("email", { required: "Email is required" })}
+          />
+          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
 
           <Select
             label="Role"
@@ -97,25 +142,68 @@ const Signup = () => {
                 options={["full-time", "part-time"]}
               />
 
-              <Input
-                label="Skills (comma-separated)"
-                type="text"
-                {...register("skills")}
-              />
+              {/* ✅ Checkbox Group for Skills */}
+              <div>
+                <label className="text-sm font-medium text-gray-600">Skills</label>
+                <Controller
+                  control={control}
+                  name="skills"
+                  render={({ field }) => {
+                    const { value = [], onChange } = field;
+                    const toggleSkill = (skill: string) => {
+                      if (value.includes(skill)) {
+                        onChange(value.filter((s) => s !== skill));
+                      } else {
+                        onChange([...value, skill]);
+                      }
+                    };
+
+                    return (
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        {skillOptions.map((skill) => (
+                          <label key={skill} className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={value.includes(skill)}
+                              onChange={() => toggleSkill(skill)}
+                            />
+                            <span>{skill}</span>
+                          </label>
+                        ))}
+                      </div>
+                    );
+                  }}
+                />
+              </div>
 
               <Select
                 label="Seniority"
                 {...register("seniority")}
                 options={["junior", "mid", "senior"]}
               />
+
+              <Select
+                label="Department"
+                {...register("department")}
+                options={[
+                  "frontend",
+                  "backend",
+                  "devOps",
+                  "qa",
+                  "ui/ux",
+                  "ml",
+                  "data engineering"
+                ]}
+              />
             </>
           )}
 
           <Input
-            label="Department"
-            type="text"
-            {...register("department")}
+            label="Password"
+            type="password"
+            {...register("password", { required: "Password is required" })}
           />
+          {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
 
           <div>
             <span>Already have an account?</span>
@@ -136,6 +224,9 @@ const Signup = () => {
           </button>
         </div>
       </form>
+      {
+        open && <OTPModal data={watch()} isOpen={open} onClose={() => setOpen(false)} onSubmit={handleSignup} />
+      }
     </div>
   );
 };

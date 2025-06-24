@@ -1,23 +1,32 @@
 import express from "express";
-// import cors from "cors";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env", });
+import cookieParser from "cookie-parser";
 
 const app = express();
+app.use(cookieParser()); 
 
-// app.use(
-//   cors({
-//     origin: process.env.CORS_ORIGIN,
-//     credentials: true,
-//     methods: "GET,POST,PUT,DELETE",
-//     allowedHeaders: "Content-Type,Authorization",
-//   })
-// );
+console.log("process.env.corsorigin: ", process.env.CORS_ORIGIN);
 
-// app.use(express.json({ limit: "16kb" }));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+    // methods: "GET,POST,PUT,DELETE",
+    // allowedHeaders: "Content-Type,Authorization",
+  })
+);
+
+app.use(express.json({ limit: "16kb" }));
 // app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 // app.use(express.static("public"));
 
-// import userRouter from "./routes/user.route.js";
-// app.use("/api/user", userRouter);
+import authRouter from "./routes/auth.route";
+app.use("/api/auth", authRouter);
+
+import projectRouter from "./routes/project.route";
+app.use("/api", projectRouter);
 
 // import transactionRouter from "./routes/transaction.route.js";
 // app.use("/api/transaction", transactionRouter);
