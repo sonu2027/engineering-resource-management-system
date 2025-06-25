@@ -1,11 +1,14 @@
 import { Router } from "express";
-import { createProject, fetchProjects } from "../controllers/project.controller";
+import { createProject, fetchProjects, updateProject, deleteProject } from "../controllers/project.controller";
 import { verifyToken } from "../middleware/verifyToken.middleware";
 
 const projectRouter = Router();
 
 projectRouter.route("/projects").post(verifyToken, createProject);
 projectRouter.route("/projects").get(verifyToken, fetchProjects);
+projectRouter.patch("/projects/:id", verifyToken, updateProject);
+projectRouter.delete("/projects/:id", verifyToken, deleteProject);
+
 
 export default projectRouter;
 

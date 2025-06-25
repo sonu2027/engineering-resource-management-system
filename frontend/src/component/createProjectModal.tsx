@@ -3,7 +3,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
@@ -11,10 +10,11 @@ import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { useUser } from "../context/UseProvider";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createProject } from "../apiCall/createProject";
 import toast from "react-hot-toast";
 import { fetchProjects } from "../apiCall/fetchProjects";
+import { editProject } from "../apiCall/editProject"; // add this import
 
 type FormData = {
   name: string;
@@ -50,12 +50,20 @@ const skillOptions = [
 
 type Props = {
   setProjects: React.Dispatch<React.SetStateAction<Project[] | null>>;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  project?: Project | null;
 };
 
-export function CreateProjectModal({ setProjects }: Props) {
-  const { register, handleSubmit, reset } = useForm<FormData>();
+
+export function CreateProjectModal({
+  setProjects,
+  open,
+  onOpenChange,
+  project,
+}: Props) {
+  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
   const { user } = useUser();
-  const [open, setOpen] = useState(false);
 
   const onSubmit = async (data: FormData) => {
     const payload = {
@@ -63,20 +71,34 @@ export function CreateProjectModal({ setProjects }: Props) {
       managerId: user?._id,
     };
 
-    createProject(payload)
-      .then((res) => {
-        console.log("res in c: ", res);
-        setOpen(false)
-        toast.success("Project created successfully")
-        return fetchProjects(user!._id)
-      })
-      .then((res) => {
-        setProjects(res)
-      })
-      .catch((error) => {
-        console.log("error: ", error);
-      })
+    try {
+      if (project) {
+        await editProject(project._id, payload);
+        toast.success("Project updated successfully");
+        const updatedProjects = await fetchProjects(user!._id);
+        setProjects(updatedProjects);
+      } else {
+        createProject(payload)
+          .then((res) => {
+            console.log("res in c: ", res);
+            onOpenChange(false)
+            toast.success("Project created successfully")
+            return fetchProjects(user!._id)
+          })
+          .then((res) => {
+            setProjects(res)
+          })
+          .catch((error) => {
+            console.log("error: ", error);
+          })
+      }
+      onOpenChange(false);
+    } catch (err) {
+      console.error("Error:", err);
+      toast.error("Failed to save project");
+    }
   };
+
 
   useEffect(() => {
     fetchProjects(user!._id)
@@ -89,14 +111,26 @@ export function CreateProjectModal({ setProjects }: Props) {
       })
   }, [])
 
+  useEffect(() => {
+    if (project && open) {
+      setValue("name", project.name);
+      setValue("description", project.description ?? "");
+      setValue("startDate", project.startDate.slice(0, 10));
+      setValue("endDate", project.endDate.slice(0, 10));
+      setValue("requiredSkills", project.requiredSkills);
+      setValue("teamSize", project.teamSize);
+      setValue("status", project.status);
+    } else if (!project && open) {
+      reset(); // for fresh creation
+    }
+  }, [project, open]);
+
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default">+ Create Project</Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
+          <DialogTitle>{project ? "Edit Project" : "Create New Project"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-1">
@@ -151,7 +185,7 @@ export function CreateProjectModal({ setProjects }: Props) {
             </select>
           </div>
           <Button type="submit" className="w-full">
-            Create Project
+            {project ? "Update Project" : "Create Project"}
           </Button>
         </form>
       </DialogContent>

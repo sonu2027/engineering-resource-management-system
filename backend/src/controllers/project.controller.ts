@@ -49,5 +49,35 @@ const fetchProjects = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const updateProject = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updates = req.body;
 
-export { createProject, fetchProjects };
+  try {
+    const updated = await Project.findByIdAndUpdate(id, updates, { new: true });
+    if (!updated) {
+      res.status(404).json({ message: "Project not found" });
+    }
+    res.status(200).json({ updatedProject: updated });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ message: "Failed to update project" });
+  }
+};
+
+const deleteProject = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const deleted = await Project.findByIdAndDelete(id);
+    if (!deleted) {
+      res.status(404).json({ message: "Project not found" });
+    }
+    res.status(200).json({ message: "Project deleted successfully", deleted });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ message: "Failed to delete project" });
+  }
+};
+
+export { createProject, fetchProjects, updateProject, deleteProject };
