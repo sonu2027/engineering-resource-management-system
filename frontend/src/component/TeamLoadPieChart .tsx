@@ -37,9 +37,10 @@ export const TeamLoadPieChart = () => {
                         outerRadius={100}
                         label
                     >
-                        {processed.map((entry, index) => (
+                        {processed.map((_, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
+
                     </Pie>
                     <Tooltip />
                     <Legend wrapperStyle={{ maxHeight: 300, overflowY: "auto" }} layout="vertical" align="right" verticalAlign="middle" />
