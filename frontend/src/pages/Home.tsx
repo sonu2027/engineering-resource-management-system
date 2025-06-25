@@ -8,8 +8,9 @@ import { CreateProjectModal } from "../component/createProjectModal";
 import { fetchProjects } from "../apiCall/fetchProjects";
 import toast from "react-hot-toast";
 import { Button } from "../components/ui/button";
-import { deleteProject } from "../apiCall/deleteProject";
+// import { deleteProject } from "../apiCall/deleteProject";
 import { DeleteProjectModal } from "../component/DeleteProjectModal";
+import { ProjectDetailsModal } from "../component/ProjectDetailsModal";
 
 type Project = {
   _id: string;
@@ -31,6 +32,7 @@ function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState<string | null>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -48,20 +50,6 @@ function Home() {
         setLoading(false);
       });
   }, [user?._id]);
-
-  const handleDelete = async (id: string) => {
-    const confirmDelete = confirm("Are you sure you want to delete this project?");
-    if (!confirmDelete) return;
-
-    try {
-      await deleteProject(id);
-      toast.success("Project deleted successfully");
-      const updated = await fetchProjects(user!._id);
-      setProjects(updated);
-    } catch (err) {
-      toast.error("Failed to delete project");
-    }
-  };
 
 
   if (user?.role === "manager") {
@@ -88,22 +76,13 @@ function Home() {
           <div>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {projects.length > 0 && projects.map((project) => (
-                <Card onClick={() => {
-                  setSelectedProject(project);
-                  setModalOpen(true);
-                }} key={project._id} className="relative border shadow-sm">
+                <Card key={project._id} className="relative border shadow-sm cursor-pointer"
+                  onClick={() => {
+                    setSelectedProject(project);
+                    setDetailsModalOpen(true);
+                  }}>
                   <CardHeader className="pb-2">
                     {/* <Button
-                      variant="ghost"
-                      className="text-red-500 text-xs absolute top-2 right-2"
-                      onClick={(e) => {
-                        e.stopPropagation(); // stop card click from opening edit
-                        handleDelete(project._id);
-                      }}
-                    >
-                      Delete
-                    </Button> */}
-                    <Button
                       variant="ghost"
                       className="text-red-500 text-xs absolute top-2 right-2"
                       onClick={(e) => {
@@ -114,6 +93,42 @@ function Home() {
                     >
                       Delete
                     </Button>
+
+                    <Button
+                      variant="ghost"
+                      className="text-red-500 text-xs absolute top-2 right-2"
+                      onClick={() => {
+                        setSelectedProject(project);
+                        setModalOpen(true);
+                      }}
+                    >
+                      Edit
+                    </Button> */}
+
+                    <div className="absolute top-2 right-2 flex gap-1 z-10">
+                      <Button
+                        variant="ghost"
+                        className="text-red-500 text-xs px-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setProjectIdToDelete(project._id);
+                          setDeleteModalOpen(true);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="text-blue-500 text-xs px-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProject(project);
+                          setModalOpen(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </div>
 
                     <CardTitle className="text-lg">{project.name}</CardTitle>
                     <CardDescription>{project.description}</CardDescription>
@@ -162,6 +177,14 @@ function Home() {
           projectId={projectIdToDelete}
           setProjects={setProjects}
         />
+        {selectedProject && (
+          <ProjectDetailsModal
+            open={detailsModalOpen}
+            onOpenChange={setDetailsModalOpen}
+            projectId={selectedProject._id}
+          />
+        )}
+
       </section>
     )
   }

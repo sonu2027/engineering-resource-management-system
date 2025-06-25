@@ -28,10 +28,10 @@ app.use("/api/auth", authRouter);
 import projectRouter from "./routes/project.route";
 app.use("/api", projectRouter);
 
-// import transactionRouter from "./routes/transaction.route.js";
-// app.use("/api/transaction", transactionRouter);
+import userRouter from "./routes/user.route";
+app.use("/api", userRouter);
 
-// import budgetRouter from "./routes/budget.route.js";
-// app.use("/api/budget", budgetRouter);
+import assignmentRouter from "./routes/assignment.route";
+app.use("/api", assignmentRouter);
 
 export default app;

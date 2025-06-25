@@ -9,6 +9,7 @@ export interface IUser extends Document {
     skills?: string[];
     seniority?: "junior" | "mid" | "senior";
     maxCapacity?: number;
+    availableCapacity?: number;
     department?: string;
     password: string;
 }
@@ -48,6 +49,9 @@ const UserSchema: Schema<IUser> = new Schema(
         },
         maxCapacity: {
             type: Number
+        },
+        availableCapacity: {
+            type: Number,
         },
         skills: {
             type: [String],

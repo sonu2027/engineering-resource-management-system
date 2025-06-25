@@ -44,7 +44,8 @@ const signupUser = async (req: Request, res: Response) => {
         seniority,
         skills,
         department,
-        maxCapacity: defaultCapacity
+        maxCapacity: defaultCapacity,
+        availableCapacity: defaultCapacity
       });
     }
 
