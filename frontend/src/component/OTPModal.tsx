@@ -5,7 +5,7 @@ type SignupFormData = {
   email: string;
   role: "engineer" | "manager";
   employmentType?: "full-time" | "part-time";
-  skills: string[]; // ✅ checkbox value as string[]
+  skills: string[];
   seniority?: "junior" | "mid" | "senior";
   department?: string;
   password: string;

@@ -13,7 +13,7 @@ type SignupFormData = {
   email: string;
   role: "engineer" | "manager";
   employmentType?: "full-time" | "part-time";
-  skills: string[]; // ✅ checkbox value as string[]
+  skills: string[]; 
   seniority?: "junior" | "mid" | "senior";
   department?: string;
   password: string;
@@ -142,7 +142,6 @@ const Signup = () => {
                 options={["full-time", "part-time"]}
               />
 
-              {/* ✅ Checkbox Group for Skills */}
               <div>
                 <label className="text-sm font-medium text-gray-600">Skills</label>
                 <Controller

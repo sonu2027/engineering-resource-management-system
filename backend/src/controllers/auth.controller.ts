@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
+import UserModel from "../models/user.model";
 
 const signupUser = async (req: Request, res: Response) => {
 
@@ -124,10 +125,10 @@ const loginUser = async (req: Request, res: Response) => {
 
     res
       .cookie("token", token, {
-        httpOnly: true,       
-        secure: true,         
-        sameSite: "none",      
-        maxAge: 60 * 60 * 1000, 
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 60 * 60 * 1000,
       })
       .status(200)
       .json({ message: "Login successful", user: userWithoutPassword });
@@ -138,4 +139,26 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export { signupUser, sendEmailVerificationOTP, loginUser }
+const changePassword = async (req: Request, res: Response) => {
+  const { oldPassword, newPassword , userId} = req.body;
+
+  if (!userId) { res.status(401).json({ message: "Unauthorized" }); return }
+
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) { res.status(404).json({ message: "User not found" }); return }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (isMatch) { res.status(401).json({ message: "Incorrect current password" }); return }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.status(200).json({ message: "Password updated" });
+  } catch (err) {
+    console.error("Error updating password:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export { signupUser, sendEmailVerificationOTP, loginUser, changePassword }

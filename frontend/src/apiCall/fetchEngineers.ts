@@ -9,7 +9,7 @@ type Engineer = {
 
 export const fetchEngineers = async (): Promise<Engineer[]> => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/engineers`, {
-        credentials: "include", // if JWT is stored in cookies
+        credentials: "include", 
     });
 
     if (!res.ok) {

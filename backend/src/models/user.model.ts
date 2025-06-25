@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-// 1. TypeScript Interface
 export interface IUser extends Document {
     email: string;
     name: string;
@@ -14,7 +13,6 @@ export interface IUser extends Document {
     password: string;
 }
 
-// 2. Mongoose Schema
 const UserSchema: Schema<IUser> = new Schema(
     {
         email: {
@@ -81,6 +79,5 @@ const UserSchema: Schema<IUser> = new Schema(
     }
 );
 
-// 4. Export model
 const UserModel = mongoose.model<IUser>("User", UserSchema);
 export default UserModel;

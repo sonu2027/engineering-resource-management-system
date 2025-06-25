@@ -12,5 +12,5 @@ export const deleteAssignment = async (assignmentId: string) => {
         throw new Error(error.message || "Failed to delete assignment");
     }
 
-    return true; // or return response message if needed
+    return true; 
 };

@@ -1,4 +1,3 @@
-// context/UserContext.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 type User = {
@@ -23,7 +22,6 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUserState] = useState<User | null>(null);
 
-    // Wrap setUser to update localStorage too
     const setUser = (user: User | null) => {
         setUserState(user);
         if (user) {

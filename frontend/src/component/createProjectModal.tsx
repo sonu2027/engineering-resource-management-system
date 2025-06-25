@@ -14,14 +14,14 @@ import { useEffect } from "react";
 import { createProject } from "../apiCall/createProject";
 import toast from "react-hot-toast";
 import { fetchProjects } from "../apiCall/fetchProjects";
-import { editProject } from "../apiCall/editProject"; // add this import
+import { editProject } from "../apiCall/editProject"; 
 
 type FormData = {
   name: string;
   description?: string;
   startDate: string;
   endDate: string;
-  requiredSkills: string[]; // ⬅ updated
+  requiredSkills: string[]; 
   teamSize: number;
   status: "planning" | "active" | "completed";
 };
@@ -121,7 +121,7 @@ export function CreateProjectModal({
       setValue("teamSize", project.teamSize);
       setValue("status", project.status);
     } else if (!project && open) {
-      reset(); // for fresh creation
+      reset(); 
     }
   }, [project, open]);
 

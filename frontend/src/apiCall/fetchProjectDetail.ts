@@ -4,5 +4,5 @@ export const fetchProjectDetail = async (projectId: string) => {
   });
   if (!res.ok) throw new Error("Failed to fetch project info");
 
-  return res.json(); // returns { project, assignments }
+  return res.json(); 
 };

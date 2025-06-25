@@ -15,7 +15,7 @@ const fetchProjects = async (managerId: string): Promise<Project[]> => {
         const res = await fetch(
             `${import.meta.env.VITE_API_URL}/api/projects?managerId=${managerId}`,
             {
-                credentials: "include", // 👈 sends cookie for auth
+                credentials: "include", 
             }
         );
 
@@ -26,7 +26,7 @@ const fetchProjects = async (managerId: string): Promise<Project[]> => {
         const data = await res.json();
         console.log("data: ", data);
         
-        return data.projects; // assuming API returns { projects: [...] }
+        return data.projects; 
     } catch (err) {
         console.error("Fetch Projects Error:", err);
         throw err;

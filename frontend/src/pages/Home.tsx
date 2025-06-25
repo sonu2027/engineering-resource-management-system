@@ -2,6 +2,7 @@ import { useUser } from "../context/UseProvider";
 import ManagerHome from "../component/ManagerHome";
 import EngineerHome from "../component/EngineerHome";
 import { ManagerNavbar } from "../component/ManagerNavbar";
+import { EngineerNavbar } from "../component/EngineerNavbar";
 
 function Home() {
 
@@ -15,7 +16,10 @@ function Home() {
     )
   }
   return (
-    <EngineerHome />
+    <>
+      <EngineerNavbar />
+      <EngineerHome />
+    </>
   )
 }
 

@@ -67,7 +67,6 @@ const updateProject = async (req: Request, res: Response) => {
 
         if (engineer?.availableCapacity !== undefined) {
           engineer.availableCapacity += assignment.allocationPercentage;
-          // Optional: Cap it at maxCapacity
           if (engineer.availableCapacity > (engineer.maxCapacity ?? 100)) {
             engineer.availableCapacity = engineer.maxCapacity ?? 100;
           }
@@ -77,7 +76,6 @@ const updateProject = async (req: Request, res: Response) => {
       }
     }
 
-    // Step 2: Update the project
     const updated = await Project.findByIdAndUpdate(id, updates, { new: true });
     if (!updated) {
       res.status(404).json({ message: "Project not found" });
@@ -115,7 +113,7 @@ export const getProjectWithAssignments = async (req: Request, res: Response) => 
     }
 
     const assignments = await Assignment.find({ projectId: req.params.id })
-      .populate("engineerId", "name email skills") // you can add more fields if needed
+      .populate("engineerId", "name email skills") 
 
     res.status(200).json({ project, assignments });
   } catch (err) {
@@ -123,7 +121,6 @@ export const getProjectWithAssignments = async (req: Request, res: Response) => 
   }
 };
 
-// GET /api/analytics/assignments
 export const getDashboardData = async (req: Request, res: Response) => {
   try {
     const assignments = await Assignment.find()
@@ -161,7 +158,7 @@ export const getDashboardData = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to load dashboard data" });
   }
 };
-// GET /api/analytics/assignment-timeline
+
 export const getAssignmentTimeline = async (req: Request, res: Response) => {
   try {
     const timelineData = await Assignment.find()

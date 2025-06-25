@@ -3,5 +3,5 @@ export const fetchTeamLoad = async () => {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to fetch team load");
-  return res.json(); // returns { team: [...] }
+  return res.json(); 
 };

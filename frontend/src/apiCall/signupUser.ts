@@ -22,7 +22,6 @@ const signupUser = async (userData: SignupFormData) => {
         },
         method: "POST",
         body: JSON.stringify(userData),
-        // credentials: "include"
       }
     );
     let data = await response.json();

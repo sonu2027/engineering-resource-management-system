@@ -4,5 +4,5 @@ export const fetchAssignmentSummary = async () => {
   });
 
   if (!res.ok) throw new Error("Failed to load summary");
-  return res.json(); // returns { summary: [...] }
+  return res.json(); 
 };

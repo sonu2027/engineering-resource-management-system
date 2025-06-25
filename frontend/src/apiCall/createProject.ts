@@ -3,7 +3,7 @@ type FormData = {
     description?: string;
     startDate: string;
     endDate: string;
-    requiredSkills: string[]; // ⬅ updated
+    requiredSkills: string[];
     teamSize: number;
     status: "planning" | "active" | "completed";
 };
@@ -17,7 +17,7 @@ const createProject = async (data: FormData) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials: "include", // 👈 This is key to send cookies!
+                credentials: "include", 
                 body: JSON.stringify(data),
             }
         );
