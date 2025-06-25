@@ -5,6 +5,7 @@ import { AssignmentForm } from "../component/AssignmentForm";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { useUser } from "../context/UseProvider";
+import { ManagerNavbar } from "../component/ManagerNavbar";
 
 export const EngineerListPage = () => {
   const [engineers, setEngineers] = useState<any[]>([]);
@@ -32,7 +33,9 @@ export const EngineerListPage = () => {
 
 
   return (
-    <section className="p-6 space-y-6">
+    <div>
+      <ManagerNavbar/>
+      <section className="p-6 space-y-6">
       <h1 className="text-2xl font-semibold">Engineer Directory</h1>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -84,5 +87,6 @@ export const EngineerListPage = () => {
         ))}
       </div>
     </section>
+    </div>
   );
 };

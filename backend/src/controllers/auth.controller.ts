@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import User from "../models/user.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 
 const signupUser = async (req: Request, res: Response) => {
 
@@ -71,7 +71,6 @@ const sendEmailVerificationOTP = async (req: Request, res: Response) => {
   const { OTP, email } = req.body;
   console.log("req.body: ", req.body);
 
-  // Create a transporter object using SMTP transport
   let transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -80,7 +79,6 @@ const sendEmailVerificationOTP = async (req: Request, res: Response) => {
     },
   });
 
-  // Setup email data
   let mailOptions = {
     from: "sonu.mondal.2027@gmail.com",
     to: email,
@@ -126,10 +124,10 @@ const loginUser = async (req: Request, res: Response) => {
 
     res
       .cookie("token", token, {
-        httpOnly: true,       // prevent access from JS
-        secure: true,         // only over HTTPS
-        sameSite: "lax",      // protect against CSRF
-        maxAge: 60 * 60 * 1000, // 1 hour
+        httpOnly: true,       
+        secure: true,         
+        sameSite: "lax",      
+        maxAge: 60 * 60 * 1000, 
       })
       .status(200)
       .json({ message: "Login successful", user: userWithoutPassword });
