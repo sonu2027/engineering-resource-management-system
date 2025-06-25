@@ -15,8 +15,7 @@ function Home() {
     )
   }
   return (
-    <><EngineerHome />
-      <ManagerNavbar /></>
+    <EngineerHome />
   )
 }
 
