@@ -4,12 +4,12 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "./ui/
 import { Badge } from "./ui/badge";
 import { Skeleton } from "./ui/skeleton";
 import { format } from "date-fns";
-import { CreateProjectModal } from "./createProjectModal";
+import { CreateProjectModal } from "../modals/createProjectModal";
 import { fetchProjects } from "../apiCall/fetchProjects";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button";
-import { DeleteProjectModal } from "../components/DeleteProjectModal";
-import { ProjectDetailsModal } from "../components/ProjectDetailsModal";
+import { DeleteProjectModal } from "../modals/DeleteProjectModal";
+import { ProjectDetailsModal } from "../modals/ProjectDetailsModal";
 
 type Project = {
     _id: string;

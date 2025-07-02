@@ -3,25 +3,25 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
+} from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { useUser } from "../context/UseProvider";
 import { useEffect } from "react";
 import { createProject } from "../apiCall/createProject";
 import toast from "react-hot-toast";
 import { fetchProjects } from "../apiCall/fetchProjects";
-import { editProject } from "../apiCall/editProject"; 
+import { editProject } from "../apiCall/editProject";
 
 type FormData = {
   name: string;
   description?: string;
   startDate: string;
   endDate: string;
-  requiredSkills: string[]; 
+  requiredSkills: string[];
   teamSize: number;
   status: "planning" | "active" | "completed";
 };
@@ -71,7 +71,7 @@ export function CreateProjectModal({
       managerId: user?._id,
     };
 
-    if(payload.teamSize<1){
+    if (payload.teamSize < 1) {
       toast.error("Team size should be greater than 0")
       return
     }
@@ -126,7 +126,7 @@ export function CreateProjectModal({
       setValue("teamSize", project.teamSize);
       setValue("status", project.status);
     } else if (!project && open) {
-      reset(); 
+      reset();
     }
   }, [project, open]);
 

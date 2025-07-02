@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // or use Heroicons if available
+import { Menu, X } from "lucide-react";
 import { FiLogOut } from "react-icons/fi";
+import LogoutModal from "../modals/LogoutModal";
 
 export const ManagerNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -45,10 +46,7 @@ export const ManagerNavbar = () => {
                 </div>
             )}
             {
-                logout &&
-                <div className="inset-0">
-                    hello
-                </div>
+                logout && <LogoutModal setLogout={setLogout} />
             }
         </nav>
     );

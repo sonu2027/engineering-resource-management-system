@@ -5,15 +5,17 @@ import { useNavigate } from "react-router-dom";
 import signupUser from "../apiCall/signupUser";
 import { sendEmailVerificationOTP } from "../apiCall/sendEmailVerificationOTP";
 import { useState } from "react";
-import OTPModal from "../components/OTPModal";
+import OTPModal from "../modals/OTPModal";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { checkCookies } from "../apiCall/checkCookies";
 
 type SignupFormData = {
   name: string;
   email: string;
   role: "engineer" | "manager";
   employmentType?: "full-time" | "part-time";
-  skills: string[]; 
+  skills: string[];
   seniority?: "junior" | "mid" | "senior";
   department?: string;
   password: string;
@@ -104,6 +106,19 @@ const Signup = () => {
       setOpen(false)
     }
   }
+
+  useEffect(() => {
+    checkCookies()
+      .then((res) => {
+        if (res.success) {
+          navigate("/home");
+        }
+      })
+      .catch((error) => {
+        console.log("error in home: ", error);
+        navigate("/login")
+      })
+  }, [])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-pink-100 pt-5">

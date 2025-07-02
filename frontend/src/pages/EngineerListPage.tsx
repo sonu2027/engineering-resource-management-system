@@ -6,6 +6,8 @@ import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { useUser } from "../context/UseProvider";
 import { ManagerNavbar } from "../components/ManagerNavbar";
+import { useNavigate } from "react-router-dom";
+import { checkCookies } from "../apiCall/checkCookies";
 
 export const EngineerListPage = () => {
   const [engineers, setEngineers] = useState<any[]>([]);
@@ -19,6 +21,8 @@ export const EngineerListPage = () => {
       skill.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!user?._id) return;
@@ -35,6 +39,19 @@ export const EngineerListPage = () => {
       })
       .catch(console.error);
   }, [user?._id]);
+
+  useEffect(() => {
+    checkCookies()
+      .then((res) => {
+        if (!res.success) {
+          navigate("/login");
+        }
+      })
+      .catch((error) => {
+        console.log("error in home: ", error);
+        navigate("/login")
+      })
+  }, [])
 
 
   return (

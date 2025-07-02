@@ -6,6 +6,8 @@ import { Label } from "../components/ui/label";
 import { toast } from "react-hot-toast";
 import { useUser } from "../context/UseProvider";
 import { EngineerNavbar } from "../components/EngineerNavbar";
+import { useNavigate } from "react-router-dom";
+import { checkCookies } from "../apiCall/checkCookies";
 
 const DEPARTMENTS = [
     "frontend",
@@ -84,7 +86,7 @@ export const EngineerProfile = () => {
                 body: JSON.stringify({
                     name: formData.name,
                     department: formData.department,
-                    skills: formData.skills, 
+                    skills: formData.skills,
                 }),
             });
 
@@ -97,6 +99,22 @@ export const EngineerProfile = () => {
             setIsSaving(false);
         }
     };
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        checkCookies()
+            .then((res) => {
+                if (!res.success) {
+                    navigate("/login");
+                }
+            })
+            .catch((error) => {
+                console.log("error in home: ", error);
+                navigate("/login")
+            })
+    }, [])
+
 
     return (
         <>

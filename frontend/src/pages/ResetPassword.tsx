@@ -45,6 +45,7 @@ export const ResetPassword = () => {
         }
     };
 
+
     return (
         <div className="w-full max-w-md px-4 py-8 mx-auto">
             <h2 className="text-xl font-bold mb-6 text-center text-blue-600">Change Password</h2>

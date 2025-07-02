@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import loginUser from "../apiCall/loginUser";
 import toast from "react-hot-toast";
 import { useUser } from "../context/UseProvider";
+import { checkCookies } from "../apiCall/checkCookies";
+import { useEffect } from "react";
 
 type LoginFormData = {
     email: string;
@@ -41,6 +43,20 @@ const Login = () => {
     const handleForgotPassword = () => {
         navigate("/change-password")
     };
+    
+    useEffect(() => {
+        checkCookies()
+            .then((res) => {
+                if (res.success) {
+                    navigate("/home");
+                }
+            })
+            .catch((error) => {
+                console.log("error in home: ", error);
+                navigate("/login")
+            })
+    }, [])
+    
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-pink-100">

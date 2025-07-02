@@ -218,5 +218,33 @@ const updatePassword = async (req: Request, res: Response) => {
 };
 
 
+const logoutUser = (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
 
-export { signupUser, sendEmailVerificationOTP, loginUser, changePassword, verifyEmail, updatePassword }
+  res.status(200).json({ success: true, message: "Logged out successfully." });
+};
+
+
+const checkCookie = (req: Request, res: Response) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    res.status(401).json({ success: false, message: "No token found" });
+    return
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    res.status(200).json({ success: true, user: decoded });
+  } catch (error) {
+    res.status(401).json({ success: false, message: "Invalid or expired token" });
+  }
+};
+
+
+
+export { signupUser, sendEmailVerificationOTP, loginUser, changePassword, verifyEmail, updatePassword, logoutUser, checkCookie }
