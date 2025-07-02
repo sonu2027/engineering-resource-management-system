@@ -1,15 +1,15 @@
 import { useUser } from "../context/UseProvider"
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { Skeleton } from "../components/ui/skeleton";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Skeleton } from "./ui/skeleton";
 import { format } from "date-fns";
-import { CreateProjectModal } from "../component/createProjectModal";
+import { CreateProjectModal } from "./createProjectModal";
 import { fetchProjects } from "../apiCall/fetchProjects";
 import toast from "react-hot-toast";
-import { Button } from "../components/ui/button";
-import { DeleteProjectModal } from "../component/DeleteProjectModal";
-import { ProjectDetailsModal } from "../component/ProjectDetailsModal";
+import { Button } from "./ui/button";
+import { DeleteProjectModal } from "../components/DeleteProjectModal";
+import { ProjectDetailsModal } from "../components/ProjectDetailsModal";
 
 type Project = {
     _id: string;

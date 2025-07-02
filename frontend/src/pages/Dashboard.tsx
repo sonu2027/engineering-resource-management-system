@@ -1,7 +1,7 @@
-import { AssignmentSummaryTable } from "../component/AssignmentSummaryTable"
-import { TimelineChart } from "../component/TimeLineChart"
-import { TeamLoadPieChart } from "../component/TeamLoadPieChart "
-import { ManagerNavbar } from "../component/ManagerNavbar"
+import { AssignmentSummaryTable } from "../components/AssignmentSummaryTable"
+import { TimelineChart } from "../components/TimeLineChart"
+import { TeamLoadPieChart } from "../components/TeamLoadPieChart "
+import { ManagerNavbar } from "../components/ManagerNavbar"
 
 function Dashboard() {
     return (

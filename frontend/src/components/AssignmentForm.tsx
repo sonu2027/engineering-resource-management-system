@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { createAssignment } from "../apiCall/createAssignment";
-import { Input } from "../components/ui/input";
-import { Button } from "../components/ui/button";
-import { Label } from "../components/ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
 import toast from "react-hot-toast";
 
 type FormProps = {
@@ -15,6 +15,14 @@ export const AssignmentForm = ({ engineerId, projects, onAssigned }: FormProps) 
     const { register, handleSubmit, reset } = useForm();
 
     const onSubmit = async (data: any) => {
+        if (data.allocationPercentage < 5) {
+            toast.error("Allocation Percentage should be greater or equal to 5")
+            return
+        }
+        else if (data.allocationPercentage > 100) {
+            toast.error("Allocation Percentage should be less than or equal to 100")
+            return
+        }
         try {
             await createAssignment({ ...data, engineerId });
             toast.success("Engineer assigned!");

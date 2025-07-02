@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Input from "../component/Input";
+import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
 import loginUser from "../apiCall/loginUser";
 import toast from "react-hot-toast";
@@ -39,7 +39,7 @@ const Login = () => {
     };
 
     const handleForgotPassword = () => {
-        alert("Redirecting to Forgot Password Page...");
+        navigate("/change-password")
     };
 
     return (
@@ -71,7 +71,7 @@ const Login = () => {
                         {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                     </div>
 
-                    <div className="text-sm text-center">
+                    <div className="text-sm">
                         <span>Don't have an account?</span>
                         <button
                             type="button"

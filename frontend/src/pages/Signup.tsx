@@ -1,11 +1,11 @@
 import { useForm, Controller } from "react-hook-form";
-import Input from "../component/Input";
-import Select from "../component/Select";
+import Input from "../components/Input";
+import Select from "../components/Select";
 import { useNavigate } from "react-router-dom";
 import signupUser from "../apiCall/signupUser";
 import { sendEmailVerificationOTP } from "../apiCall/sendEmailVerificationOTP";
 import { useState } from "react";
-import OTPModal from "../component/OTPModal";
+import OTPModal from "../components/OTPModal";
 import toast from "react-hot-toast";
 
 type SignupFormData = {
@@ -204,7 +204,7 @@ const Signup = () => {
           />
           {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
 
-          <div>
+          <div className="text-sm">
             <span>Already have an account?</span>
             <button
               type="button"

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "../components/ui/card";
 import { Label } from "../components/ui/label";
 import { toast } from "react-hot-toast";
 import { useUser } from "../context/UseProvider";
-import { EngineerNavbar } from "../component/EngineerNavbar";
+import { EngineerNavbar } from "../components/EngineerNavbar";
 
 const DEPARTMENTS = [
     "frontend",

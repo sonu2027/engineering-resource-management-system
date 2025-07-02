@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchEngineers } from "../apiCall/fetchEngineers";
 import { fetchProjects } from "../apiCall/fetchProjects";
-import { AssignmentForm } from "../component/AssignmentForm";
+import { AssignmentForm } from "../components/AssignmentForm";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { useUser } from "../context/UseProvider";
-import { ManagerNavbar } from "../component/ManagerNavbar";
+import { ManagerNavbar } from "../components/ManagerNavbar";
 
 export const EngineerListPage = () => {
   const [engineers, setEngineers] = useState<any[]>([]);

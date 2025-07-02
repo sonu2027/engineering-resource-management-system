@@ -3,11 +3,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../components/ui/dialog";
-import { Input } from "../components/ui/input";
-import { Button } from "../components/ui/button";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
+} from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
 import { useForm } from "react-hook-form";
 import { useUser } from "../context/UseProvider";
 import { useEffect } from "react";
@@ -70,6 +70,11 @@ export function CreateProjectModal({
       ...data,
       managerId: user?._id,
     };
+
+    if(payload.teamSize<1){
+      toast.error("Team size should be greater than 0")
+      return
+    }
 
     try {
       if (project) {

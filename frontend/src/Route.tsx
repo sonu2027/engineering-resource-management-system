@@ -7,18 +7,20 @@ import Dashboard from './pages/Dashboard'
 import { LandingPage } from './pages/LandingPage'
 import { EngineerProfile } from './pages/EngineerProfile'
 import { ResetPassword } from './pages/ResetPassword'
+import ChangePassword from './pages/ChangePassword'
 
 function Routing() {
     return (
         <Routes>
             <Route path='/' element={<LandingPage />} />
-            <Route path='/profile' element={< EngineerProfile/>} />
+            <Route path='/profile' element={< EngineerProfile />} />
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/home' element={<Home />} />
             <Route path='/engineer' element={<EngineerListPage />} />
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/reset-password' element={<ResetPassword />} />
+            <Route path='/change-password' element={<ChangePassword />} />
         </Routes>
     )
 }
