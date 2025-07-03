@@ -2,7 +2,14 @@ import { Pie, PieChart, Cell, Legend, ResponsiveContainer, Tooltip } from "recha
 import { useEffect, useState } from "react";
 import { fetchTeamLoad } from "../apiCall/fetchTeamLoad";
 
-const COLORS = ["#10b981", "#f59e0b", "#ef4444"];
+// const COLORS = ["#10b981", "#f59e0b", "#ef4444"];
+const COLORS = [
+  "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6",
+  "#ec4899", "#14b8a6", "#f97316", "#22c55e", "#eab308",
+  "#6366f1", "#06b6d4", "#d946ef", "#4ade80", "#f43f5e",
+  "#0ea5e9", "#a855f7", "#84cc16", "#fb923c", "#7c3aed"
+];
+
 type EngineerLoad = {
     name: string;
     department: string;

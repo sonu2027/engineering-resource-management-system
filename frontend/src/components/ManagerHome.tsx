@@ -10,6 +10,9 @@ import toast from "react-hot-toast";
 import { Button } from "./ui/button";
 import { DeleteProjectModal } from "../modals/DeleteProjectModal";
 import { ProjectDetailsModal } from "../modals/ProjectDetailsModal";
+import { FaPlus } from "react-icons/fa6";
+import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineDelete } from "react-icons/md";
 
 type Project = {
     _id: string;
@@ -59,7 +62,7 @@ function ManagerHome() {
                     setModalOpen(true);
                 }}
             >
-                + Create Project
+                <FaPlus /> Project
             </Button>
 
             {loading ? (
@@ -72,7 +75,7 @@ function ManagerHome() {
                 <div>
                     <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                         {projects.length > 0 && projects.map((project) => (
-                            <Card key={project._id} className="relative border shadow-sm cursor-pointer"
+                            <Card key={project._id} className="relative border shadow-sm cursor-pointer hover:bg-gray-50"
                                 onClick={() => {
                                     setSelectedProject(project);
                                     setDetailsModalOpen(true);
@@ -81,25 +84,25 @@ function ManagerHome() {
                                     <div className="absolute top-2 right-2 flex gap-1 z-10">
                                         <Button
                                             variant="ghost"
-                                            className="text-red-500 text-xs px-2"
+                                            className="text-red-400 text-xs font-medium px-2"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setProjectIdToDelete(project._id);
                                                 setDeleteModalOpen(true);
                                             }}
                                         >
-                                            Delete
+                                            <MdOutlineDelete />
                                         </Button>
                                         <Button
                                             variant="ghost"
-                                            className="text-blue-500 text-xs px-2"
+                                            className="text-gray-700 text-xs px-2"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setSelectedProject(project);
                                                 setModalOpen(true);
                                             }}
                                         >
-                                            Edit
+                                            <FaRegEdit />
                                         </Button>
                                     </div>
 

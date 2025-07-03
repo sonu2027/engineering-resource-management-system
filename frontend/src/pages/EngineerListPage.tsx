@@ -80,7 +80,7 @@ export const EngineerListPage = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredEngineers.map((eng) => (
-            <div key={eng._id} className="border rounded-md p-4 shadow-sm">
+            <div key={eng._id} className="border rounded-md p-4 shadow-sm hover:bg-gray-50">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-lg font-medium">{eng.name}</h2>
