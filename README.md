@@ -24,16 +24,18 @@
 
 - git clone https://github.com/sonu2027/engineering-resource-management-system.git
 
-- Backend
-  cd backend
-  npm install
-  npm run dev
+* Backend
 
-- Frontend
-  cd frontend
-  npm install
-  npm run dev
-  Make sure frontend is running at http://localhost:5173
+- cd backend
+- npm install
+- npm run dev
+
+* Frontend
+
+- cd frontend
+- npm install
+- npm run dev
+- Make sure frontend is running at http://localhost:5173
 
 # .env
 

@@ -19,6 +19,7 @@ const Login = () => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors }
     } = useForm<LoginFormData>();
 
@@ -43,7 +44,7 @@ const Login = () => {
     const handleForgotPassword = () => {
         navigate("/change-password")
     };
-    
+
     useEffect(() => {
         checkCookies()
             .then((res) => {
@@ -56,7 +57,16 @@ const Login = () => {
                 navigate("/login")
             })
     }, [])
-    
+
+    const loginAsTestUser = () => {
+        setValue("email", "manager@example.com");
+        setValue("password", "manager1");
+
+        setTimeout(() => {
+            handleSubmit(onSubmit)();
+        }, 0);
+    };
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-pink-100">
@@ -97,6 +107,14 @@ const Login = () => {
                             Signup
                         </button>
                     </div>
+
+                    <button
+                        onClick={loginAsTestUser}
+                        type="button"
+                        className="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition"
+                    >
+                        Login as test user
+                    </button>
 
                     <button
                         type="submit"
