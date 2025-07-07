@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import toast from "react-hot-toast";
+import checkSpacesForProject from "../apiCall/checkSpacesForProject";
 
 type FormProps = {
     engineerId: string;
@@ -15,6 +16,7 @@ export const AssignmentForm = ({ engineerId, projects, onAssigned }: FormProps) 
     const { register, handleSubmit, reset } = useForm();
 
     const onSubmit = async (data: any) => {
+
         if (data.allocationPercentage < 5) {
             toast.error("Allocation Percentage should be greater or equal to 5")
             return
@@ -23,14 +25,25 @@ export const AssignmentForm = ({ engineerId, projects, onAssigned }: FormProps) 
             toast.error("Allocation Percentage should be less than or equal to 100")
             return
         }
-        try {
-            await createAssignment({ ...data, engineerId });
-            toast.success("Engineer assigned!");
-            reset();
-            onAssigned();
-        } catch (err) {
-            toast.error("Assignment failed");
-        }
+
+        checkSpacesForProject(data.projectId)
+            .then((response) => {
+                if (!response.spaceAvailable) {
+                    toast.error(response.message)
+                    throw new Error("No space available");
+                }
+                createAssignment({ ...data, engineerId })
+            })
+            .then(() => {
+                toast.success("Engineer assigned!");
+                reset();
+                onAssigned();
+            })
+            .catch((error) => {
+                if (error.message !== "No space available") {
+                    toast.error("Assignment failed");
+                }
+            })
     };
 
     return (

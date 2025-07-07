@@ -113,7 +113,7 @@ export const getProjectWithAssignments = async (req: Request, res: Response) => 
     }
 
     const assignments = await Assignment.find({ projectId: req.params.id })
-      .populate("engineerId", "name email skills") 
+      .populate("engineerId", "name email skills")
 
     res.status(200).json({ project, assignments });
   } catch (err) {
@@ -241,5 +241,42 @@ export const getTeamLoad = async (req: Request, res: Response) => {
   }
 };
 
+// check how many engineer assign on the project
+const checkSpaceForProject = async (req: Request, res: Response) => {
+  try {
+    const { projectId } = req.body;
 
-export { createProject, fetchProjects, updateProject, deleteProject };
+    if (!projectId) {
+      res.status(400).json({ message: "projectId is required" });
+      return
+    }
+
+    const project = await Project.findOne({ _id: projectId });
+
+    if (!project) {
+      res.status(404).json({ message: "Project not found" });
+      return
+    }
+
+    const assignments = await Assignment.find({ projectId });
+
+    const assignedCount = assignments.length;
+    const teamSize = project.teamSize;
+
+    const spaceAvailable = assignedCount < teamSize;
+
+    res.status(200).json({
+      spaceAvailable,
+      message: spaceAvailable
+        ? "Space is available for engineer"
+        : "No space available for engineer",
+    });
+
+  } catch (error) {
+    console.error("Error checking project space:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export { createProject, fetchProjects, updateProject, deleteProject, checkSpaceForProject };
