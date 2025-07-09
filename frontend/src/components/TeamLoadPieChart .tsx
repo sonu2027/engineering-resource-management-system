@@ -4,10 +4,10 @@ import { fetchTeamLoad } from "../apiCall/fetchTeamLoad";
 
 // const COLORS = ["#10b981", "#f59e0b", "#ef4444"];
 const COLORS = [
-  "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6",
-  "#ec4899", "#14b8a6", "#f97316", "#22c55e", "#eab308",
-  "#6366f1", "#06b6d4", "#d946ef", "#4ade80", "#f43f5e",
-  "#0ea5e9", "#a855f7", "#84cc16", "#fb923c", "#7c3aed"
+    "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6",
+    "#ec4899", "#14b8a6", "#f97316", "#22c55e", "#eab308",
+    "#6366f1", "#06b6d4", "#d946ef", "#4ade80", "#f43f5e",
+    "#0ea5e9", "#a855f7", "#84cc16", "#fb923c", "#7c3aed"
 ];
 
 type EngineerLoad = {
@@ -22,7 +22,10 @@ export const TeamLoadPieChart = () => {
     const [data, setData] = useState<EngineerLoad[]>([]);
 
     useEffect(() => {
-        fetchTeamLoad().then((res) => setData(res.team));
+        fetchTeamLoad().then((res) => {
+            const useeGreaterThanZero: EngineerLoad[] = res.team.filter((e: EngineerLoad) => e.used > 0)
+            setData(useeGreaterThanZero)
+        });
     }, []);
 
     const processed = data.map((eng) => ({
@@ -42,14 +45,17 @@ export const TeamLoadPieChart = () => {
                         cx="50%"
                         cy="50%"
                         outerRadius={100}
-                        label
+                        label={({ value }: any) => `${value}%`}
                     >
                         {processed.map((_, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
 
                     </Pie>
-                    <Tooltip />
+                    <Tooltip
+                        formatter={(value: number, name: string) => [`${value}% allocated`, name]}
+                    />
+
                     <Legend wrapperStyle={{ maxHeight: 300, overflowY: "auto" }} layout="vertical" align="right" verticalAlign="middle" />
                 </PieChart>
             </ResponsiveContainer>

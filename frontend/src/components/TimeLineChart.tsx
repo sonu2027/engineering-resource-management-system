@@ -13,7 +13,6 @@ type AssignmentBar = {
 export const TimelineChart = () => {
     const [timeline, setTimeline] = useState<AssignmentBar[]>([]);
 
-
     useEffect(() => {
         fetchAssignmentTimeline().then((data) => setTimeline(data.timeline));
     }, []);
@@ -33,10 +32,10 @@ export const TimelineChart = () => {
                 <XAxis type="number" domain={["dataMin", "dataMax"]} hide />
                 <YAxis dataKey="name" type="category" width={200} />
                 <Tooltip
-  formatter={(value) => `${value} days`}
-  labelFormatter={(label) => `${label}`}
-/>
-                <Bar dataKey="duration" fill="#3b82f6"/>
+                    formatter={(value) => `${value} days`}
+                    labelFormatter={(label) => `${label}`}
+                />
+                <Bar dataKey="duration" fill="#3b82f6" minPointSize={4} />
             </BarChart>
         </ResponsiveContainer>
     );
