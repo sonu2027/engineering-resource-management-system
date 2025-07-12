@@ -2,7 +2,7 @@
 
 Track engineers, projects, assignments, and available capacity in one streamlined full-stack app.
 
-# <u>Tech Stack</u>
+# Tech Stack
 
 - Frontend: <br>
   React + TypeScript <br>
@@ -29,14 +29,12 @@ Track engineers, projects, assignments, and available capacity in one streamline
 
 - git clone https://github.com/sonu2027/engineering-resource-management-system.git
 
-<u>Backend</u>
-
+Backend
 - cd backend
 - npm install
 - npm run dev
 
-<U>Frontend</U>
-
+Frontend
 - cd frontend
 - npm install
 - npm run dev
