@@ -1,17 +1,17 @@
 # Engineering Resource Management System
 
-- Track engineers, projects, assignments, and available capacity in one streamlined full-stack app.
+Track engineers, projects, assignments, and available capacity in one streamlined full-stack app.
 
 # <u>Tech Stack</u>
 
-- Frontend:
-  React + TypeScript
-  ShadCN UI + TailwindCSS
+- Frontend: <br>
+  React + TypeScript <br>
+  ShadCN UI + TailwindCSS <br>
   React Hook Form, contextAPI
 
-- Backend:
-  Node.js + Express
-  MongoDB + Mongoose
+- Backend: <br>
+  Node.js + Express <br>
+  MongoDB + Mongoose <br>
   JWT Auth, REST APIs
 
 # Core Features
@@ -21,27 +21,32 @@
 - Manager dashboard: team overview + project assign
 
 # Demo
+
 - Frontend: https://engineering-resource-management-system-frontend.vercel.app/
 - Backend API: https://engineering-resource-management-system-backend.vercel.app/
 
 # Setup Instructions
+
 - git clone https://github.com/sonu2027/engineering-resource-management-system.git
 
-* <u>Backend</u>
+<u>Backend</u>
+
 - cd backend
 - npm install
 - npm run dev
 
-* <U>Frontend</U>
+<U>Frontend</U>
+
 - cd frontend
 - npm install
 - npm run dev
 - Make sure frontend is running at http://localhost:5173
 
 # .env
+
 - You don't need to create .env beacuse I haven't keep it on .gitignore
 
-# <u>AI Usage</u>
+# AI Usage
 
 # Which AI tools I used and how
 
@@ -95,146 +100,146 @@ To validate and understand AI-generated code suggestions, I followed a hands-on 
 
 - This step-by-step debugging approach helped me gain clarity and ensured that I wasn’t blindly copying code but actually understanding and verifying its logic.
 
-
 # seed file structure
 
+```js
 import mongoose from "mongoose";
 import User from "../src/models/user.model";
 import Project from "../src/models/project.model";
 import Assignment from "../src/models/assignment.model";
 import connectDB from "../src/connectDB";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 
 (async () => {
-try {
-await connectDB();
+  try {
+    await connectDB();
 
-        // You can comment out if you need fresh data in database every single time you run this seed.js
+    // You can comment out if you need fresh data in database every single time you run this seed.js
 
-        await User.deleteMany({});
-        await Project.deleteMany({});
-        await Assignment.deleteMany({});
+    await User.deleteMany({});
+    await Project.deleteMany({});
+    await Assignment.deleteMany({});
 
-        //  Engineers
-        const engineers = await User.insertMany([
-            {
-                name: "Alice Dev",
-                email: "alice@example.com",
-                role: "engineer",
-                department: "frontend",
-                skills: ["React", "TailwindCSS"],
-                seniority: "mid",
-                employmentType: "full-time",
-                maxCapacity: 100,
-                availableCapacity: 40,
-                password: await bcrypt.hash("engineer1", 10),
-            },
-            {
-                name: "Bob Ops",
-                email: "bob@example.com",
-                role: "engineer",
-                department: "devOps",
-                skills: ["Docker", "Node.js"],
-                seniority: "senior",
-                employmentType: "part-time",
-                maxCapacity: 50,
-                availableCapacity: 60,
-                password: await bcrypt.hash("engineer2", 10),
-            },
-            {
-                name: "Charlie Analyst",
-                email: "charlie@example.com",
-                role: "engineer",
-                department: "ml",
-                skills: ["Python", "MongoDB"],
-                seniority: "junior",
-                employmentType: "full-time",
-                maxCapacity: 100,
-                availableCapacity: 50,
-                password: await bcrypt.hash("engineer3", 10),
-            },
-        ]);
+    //  Engineers
+    const engineers = await User.insertMany([
+      {
+        name: "Alice Dev",
+        email: "alice@example.com",
+        role: "engineer",
+        department: "frontend",
+        skills: ["React", "TailwindCSS"],
+        seniority: "mid",
+        employmentType: "full-time",
+        maxCapacity: 100,
+        availableCapacity: 40,
+        password: await bcrypt.hash("engineer1", 10),
+      },
+      {
+        name: "Bob Ops",
+        email: "bob@example.com",
+        role: "engineer",
+        department: "devOps",
+        skills: ["Docker", "Node.js"],
+        seniority: "senior",
+        employmentType: "part-time",
+        maxCapacity: 50,
+        availableCapacity: 60,
+        password: await bcrypt.hash("engineer2", 10),
+      },
+      {
+        name: "Charlie Analyst",
+        email: "charlie@example.com",
+        role: "engineer",
+        department: "ml",
+        skills: ["Python", "MongoDB"],
+        seniority: "junior",
+        employmentType: "full-time",
+        maxCapacity: 100,
+        availableCapacity: 50,
+        password: await bcrypt.hash("engineer3", 10),
+      },
+    ]);
 
-        //  Manager
-        const manager = await User.create({
-            name: "Manager Mike",
-            email: "manager@example.com",
-            role: "manager",
-            password: await bcrypt.hash("manager1", 10),
-        });
+    //  Manager
+    const manager = await User.create({
+      name: "Manager Mike",
+      email: "manager@example.com",
+      role: "manager",
+      password: await bcrypt.hash("manager1", 10),
+    });
 
-        //  Projects
-        const projects = await Project.insertMany([
-            {
-                name: "Frontend Revamp",
-                description: "Modernize the UI with React and Tailwind",
-                startDate: new Date("2024-07-01"),
-                endDate: new Date("2024-09-30"),
-                requiredSkills: ["React", "TailwindCSS"],
-                teamSize: 2,
-                status: "active",
-                managerId: manager._id,
-            },
-            {
-                name: "ML Insight Tool",
-                description: "Develop a prediction engine with Python",
-                startDate: new Date("2024-08-15"),
-                endDate: new Date("2024-12-15"),
-                requiredSkills: ["Python", "MongoDB"],
-                teamSize: 2,
-                status: "planning",
-                managerId: manager._id,
-            },
-            {
-                name: "Infra Migration",
-                description: "Move systems to Docker-based deployment",
-                startDate: new Date("2024-07-10"),
-                endDate: new Date("2024-10-10"),
-                requiredSkills: ["Docker", "Node.js"],
-                teamSize: 1,
-                status: "active",
-                managerId: manager._id,
-            },
-        ]);
+    //  Projects
+    const projects = await Project.insertMany([
+      {
+        name: "Frontend Revamp",
+        description: "Modernize the UI with React and Tailwind",
+        startDate: new Date("2024-07-01"),
+        endDate: new Date("2024-09-30"),
+        requiredSkills: ["React", "TailwindCSS"],
+        teamSize: 2,
+        status: "active",
+        managerId: manager._id,
+      },
+      {
+        name: "ML Insight Tool",
+        description: "Develop a prediction engine with Python",
+        startDate: new Date("2024-08-15"),
+        endDate: new Date("2024-12-15"),
+        requiredSkills: ["Python", "MongoDB"],
+        teamSize: 2,
+        status: "planning",
+        managerId: manager._id,
+      },
+      {
+        name: "Infra Migration",
+        description: "Move systems to Docker-based deployment",
+        startDate: new Date("2024-07-10"),
+        endDate: new Date("2024-10-10"),
+        requiredSkills: ["Docker", "Node.js"],
+        teamSize: 1,
+        status: "active",
+        managerId: manager._id,
+      },
+    ]);
 
-        //  Assignments
-        await Assignment.insertMany([
-            {
-                engineerId: engineers[0]._id,
-                projectId: projects[0]._id,
-                allocationPercentage: 60,
-                startDate: new Date("2024-07-01"),
-                endDate: new Date("2024-09-30"),
-                role: "Frontend Developer",
-            },
-            {
-                engineerId: engineers[1]._id,
-                projectId: projects[1]._id,
-                allocationPercentage: 40,
-                startDate: new Date("2024-07-15"),
-                endDate: new Date("2024-10-10"),
-                role: "DevOps Lead",
-            },
-            {
-                engineerId: engineers[2]._id,
-                projectId: projects[2]._id,
-                allocationPercentage: 50,
-                startDate: new Date("2024-08-15"),
-                endDate: new Date("2024-12-15"),
-                role: "ML Engineer",
-            },
-        ]);
+    //  Assignments
+    await Assignment.insertMany([
+      {
+        engineerId: engineers[0]._id,
+        projectId: projects[0]._id,
+        allocationPercentage: 60,
+        startDate: new Date("2024-07-01"),
+        endDate: new Date("2024-09-30"),
+        role: "Frontend Developer",
+      },
+      {
+        engineerId: engineers[1]._id,
+        projectId: projects[1]._id,
+        allocationPercentage: 40,
+        startDate: new Date("2024-07-15"),
+        endDate: new Date("2024-10-10"),
+        role: "DevOps Lead",
+      },
+      {
+        engineerId: engineers[2]._id,
+        projectId: projects[2]._id,
+        allocationPercentage: 50,
+        startDate: new Date("2024-08-15"),
+        endDate: new Date("2024-12-15"),
+        role: "ML Engineer",
+      },
+    ]);
 
-        console.log(" Seed data inserted successfully.");
-    } catch (error) {
-        console.error(" Error seeding data:", error);
-    } finally {
-        await mongoose.disconnect();
-        console.log(" Disconnected from database.");
-    }
-
+    console.log(" Seed data inserted successfully.");
+  } catch (error) {
+    console.error(" Error seeding data:", error);
+  } finally {
+    await mongoose.disconnect();
+    console.log(" Disconnected from database.");
+  }
 })();
+```
 
 # Run seed
-- npx ts-node seed.ts
 
+- npx ts-node seed.ts
