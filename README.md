@@ -2,7 +2,7 @@
 
 - Track engineers, projects, assignments, and available capacity in one streamlined full-stack app.
 
-# Tech Stack
+# <u>Tech Stack</u>
 
 - Frontend:
   React + TypeScript
@@ -20,30 +20,30 @@
 - Engineer dashboard: profile + assignments
 - Manager dashboard: team overview + project assign
 
-# Setup Instructions
+# Demo
+- Frontend: https://engineering-resource-management-system-frontend.vercel.app/
+- Backend API: https://engineering-resource-management-system-backend.vercel.app/
 
+# Setup Instructions
 - git clone https://github.com/sonu2027/engineering-resource-management-system.git
 
-* Backend
-
+* <u>Backend</u>
 - cd backend
 - npm install
 - npm run dev
 
-* Frontend
-
+* <U>Frontend</U>
 - cd frontend
 - npm install
 - npm run dev
 - Make sure frontend is running at http://localhost:5173
 
 # .env
+- You don't need to create .env beacuse I haven't keep it on .gitignore
 
-You don't need to create .env beacuse I haven't keep it on .gitignore
+# <u>AI Usage</u>
 
-# AI Usage
-
-# Which AI tools you used and how
+# Which AI tools I used and how
 
 - I used GitHub Copilot and ChatGPT as AI tools during the development of this project.
 
@@ -55,7 +55,7 @@ You don't need to create .env beacuse I haven't keep it on .gitignore
 
 - I used ChatGPT to validate my logic, clarify doubts about implementation, and understand specific concepts when I needed deeper clarity.
 
-# Specific examples of how AI accelerated your development
+# Specific examples of how AI accelerated my development
 
 AI tools like GitHub Copilot and ChatGPT significantly accelerated my development process in several ways:
 
@@ -71,7 +71,7 @@ AI tools like GitHub Copilot and ChatGPT significantly accelerated my developmen
 
 - Overall, AI helped me move faster, solve problems in real-time, and stay focused on the core logic instead of getting stuck on repetitive or confusing tasks.
 
-# Any challenges you faced with AI-generated code and how you resolved them
+# Challenges I faced with AI-generated code and how I resolved them
 
 - At times, relying heavily on AI-generated code led to unexpected bugs that took time to debug and fix.
 
@@ -83,7 +83,7 @@ AI tools like GitHub Copilot and ChatGPT significantly accelerated my developmen
 
 - These challenges taught me that while AI is incredibly helpful, it's important to manually validate and understand the code, especially in critical areas.
 
-# Your approach to validating and understanding AI suggestions
+# My approach to validating and understanding AI suggestions
 
 To validate and understand AI-generated code suggestions, I followed a hands-on approach:
 
@@ -95,10 +95,6 @@ To validate and understand AI-generated code suggestions, I followed a hands-on 
 
 - This step-by-step debugging approach helped me gain clarity and ensured that I wasn’t blindly copying code but actually understanding and verifying its logic.
 
-# Demo
-
-- Frontend: https://engineering-resource-management-system-frontend.vercel.app/
-- Backend API: https://engineering-resource-management-system-backend.vercel.app/
 
 # seed file structure
 
@@ -108,8 +104,6 @@ import Project from "../src/models/project.model";
 import Assignment from "../src/models/assignment.model";
 import connectDB from "../src/connectDB";
 import bcrypt from "bcryptjs"
-
-// To run this file: npx ts-node seed.ts
 
 (async () => {
 try {
@@ -242,5 +236,5 @@ await connectDB();
 })();
 
 # Run seed
-
 - npx ts-node seed.ts
+
