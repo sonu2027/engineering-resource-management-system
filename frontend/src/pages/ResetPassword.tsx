@@ -13,8 +13,12 @@ export const ResetPassword = () => {
     const navigate = useNavigate()
 
     const handleSubmit = async () => {
-        if (!oldPassword || !newPassword) {
-            toast.error("Please fill both fields");
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{8,32}$/;
+
+        if (!passwordRegex.test(newPassword)) {
+            toast.error(
+                "Password must be 8–32 characters, include uppercase, lowercase, number, special character, and no spaces."
+            );
             return;
         }
 
@@ -33,12 +37,17 @@ export const ResetPassword = () => {
                 body: JSON.stringify({ oldPassword, newPassword, userId }),
             });
 
+            console.log("res", res);
+
+
             if (!res.ok) throw new Error();
             toast.success("Password changed successfully");
             setOldPassword("");
             setNewPassword("");
             navigate(-1)
         } catch (err) {
+            console.log("err", err);
+
             toast.error("Failed to change password");
         } finally {
             setIsSubmitting(false);

@@ -29,7 +29,7 @@ import bcrypt from "bcryptjs"
                 employmentType: "full-time",
                 maxCapacity: 100,
                 availableCapacity: 40,
-                password: await bcrypt.hash("engineer1", 10),
+                password: await bcrypt.hash("Engineer@1", 10),
             },
             {
                 name: "Bob Ops",
@@ -41,7 +41,7 @@ import bcrypt from "bcryptjs"
                 employmentType: "part-time",
                 maxCapacity: 50,
                 availableCapacity: 60,
-                password: await bcrypt.hash("engineer2", 10),
+                password: await bcrypt.hash("Engineer@2", 10),
             },
             {
                 name: "Charlie Analyst",
@@ -53,7 +53,7 @@ import bcrypt from "bcryptjs"
                 employmentType: "full-time",
                 maxCapacity: 100,
                 availableCapacity: 50,
-                password: await bcrypt.hash("engineer3", 10),
+                password: await bcrypt.hash("Engineer@3", 10),
             },
         ]);
 
@@ -62,7 +62,7 @@ import bcrypt from "bcryptjs"
             name: "Manager Mike",
             email: "manager@example.com",
             role: "manager",
-            password: await bcrypt.hash("manager1", 10),
+            password: await bcrypt.hash("Manager@1", 10),
         });
 
         //  Projects

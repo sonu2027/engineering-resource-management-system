@@ -19,6 +19,18 @@ function ChangePassword() {
 
     const handleEmailSubmit = async () => {
 
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in|org|net|ac\.in)$/;
+
+        if (email.length > 100) {
+            toast.error("Email must be at most 100 characters long.");
+            return;
+        }
+
+        if (!emailRegex.test(email)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
         verifyEmail(email)
             .then(() => {
                 return sendEmailVerificationOTP(email)
@@ -43,6 +55,14 @@ function ChangePassword() {
     };
 
     const handlePasswordSubmit = async () => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{8,32}$/;
+
+        if (!passwordRegex.test(password)) {
+            toast.error(
+                "Password must be 8–32 characters, include uppercase, lowercase, number, special character, and no spaces."
+            );
+            return;
+        }
         if (password !== confirmPassword) {
             toast.error("Passwords do not match.");
             return;
@@ -80,6 +100,7 @@ function ChangePassword() {
                             id="email"
                             type="email"
                             value={email}
+                            maxLength={100}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email"
                         />
@@ -104,7 +125,7 @@ function ChangePassword() {
                                 value={digit}
                                 onChange={(e) => {
                                     const val = e.target.value;
-                                    if (!/^\d?$/.test(val)) return; // allow only digits
+                                    if (!/^\d?$/.test(val)) return;
 
                                     const newOtp = [...otp];
                                     newOtp[idx] = val;

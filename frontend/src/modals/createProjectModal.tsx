@@ -62,7 +62,7 @@ export function CreateProjectModal({
   onOpenChange,
   project,
 }: Props) {
-  const { register, handleSubmit, reset, setValue } = useForm<FormData>();
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<FormData>();
   const { user } = useUser();
 
   const onSubmit = async (data: FormData) => {
@@ -140,11 +140,34 @@ export function CreateProjectModal({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-1">
             <Label htmlFor="name">Project Name</Label>
-            <Input id="name" {...register("name", { required: true })} />
+            <Input id="name" {...register("name", {
+              required: "Project name is required",
+              maxLength: {
+                value: 80,
+                message: "Description must be at most 80 characters",
+              },
+              pattern: {
+                value: /^(?!\s)(?!.*\s$)(?!.*\s{2,})(?:(?=\S{1,20})[\w.,;:!?'"()\-]{1,20}(?:\s|$))*$/,
+                message:
+                  "Each word must be 1–20 characters. No extra/multiple spaces. Only letters/digits/punctuation allowed.",
+              },
+            })} />
+            {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
           </div>
           <div className="grid gap-1">
             <Label htmlFor="desc">Description</Label>
-            <Textarea id="desc" {...register("description")} />
+            <Textarea id="desc" {...register("description", {
+              maxLength: {
+                value: 300,
+                message: "Description must be at most 300 characters",
+              },
+              pattern: {
+                value: /^(?!\s)(?!.*\s$)(?!.*\s{2,})(?:(?=\S{1,20})[\w.,;:!?'"()\-]{1,20}(?:\s|$))*$/,
+                message:
+                  "Each word must be 1–20 characters. No extra/multiple spaces. Only letters/digits/punctuation allowed.",
+              },
+            },)} />
+            {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-1">

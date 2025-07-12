@@ -60,7 +60,7 @@ const Login = () => {
 
     const loginAsTestUser = () => {
         setValue("email", "manager@example.com");
-        setValue("password", "manager1");
+        setValue("password", "Manager@1");
 
         setTimeout(() => {
             handleSubmit(onSubmit)();
@@ -83,7 +83,17 @@ const Login = () => {
                         <Input
                             label="Email"
                             type="email"
-                            {...register("email", { required: "Email is required" })}
+                            {...register("email", {
+                                required: "Email is required",
+                                maxLength: {
+                                    value: 100,
+                                    message: "Email must be at most 100 characters long",
+                                },
+                                pattern: {
+                                    value: /^[a-zA-Z0-9](?!.*\.\.)[a-zA-Z0-9._%+-]{0,62}[a-zA-Z0-9]@[a-zA-Z0-9.-]+\.(com|in|org|net|ac\.in)$/,
+                                    message: "Please enter a valid email address without consecutive dots"
+                                }
+                            })}
                         />
                         {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                     </div>
@@ -92,7 +102,23 @@ const Login = () => {
                         <Input
                             label="Password"
                             type="password"
-                            {...register("password", { required: "Password is required" })}
+                            {...register("password", {
+                                required: "Password is required",
+                                minLength: {
+                                    value: 8,
+                                    message: "Password must be at least 8 characters long",
+                                },
+                                maxLength: {
+                                    value: 32,
+                                    message: "Password must be at most 32 characters long",
+                                },
+                                pattern: {
+                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{8,32}$/
+                                    ,
+                                    message:
+                                        "Password must include uppercase, lowercase, number, special character, and no spaces",
+                                },
+                            })}
                         />
                         {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                     </div>

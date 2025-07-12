@@ -63,7 +63,6 @@ export const EngineerProfile = () => {
                 skills: data.skills || [],
             });
 
-
             // setUser?.(data); 
         } catch (err) {
             toast.error("Failed to load profile");
@@ -77,6 +76,28 @@ export const EngineerProfile = () => {
 
     const handleUpdate = async () => {
         setIsSaving(true);
+
+        const trimmedName = formData.name.trim();
+
+        if (trimmedName.length < 6 || trimmedName.length > 50) {
+            toast.error("Name must be between 7 and 50 characters");
+            setIsSaving(false);
+            return;
+        }
+
+        if (/^\s|\s$/.test(formData.name) || /\s{2,}/.test(formData.name)) {
+            toast.error("No leading/trailing or multiple consecutive spaces allowed");
+            setIsSaving(false);
+            return;
+        }
+
+        const words = trimmedName.split(" ");
+        if (words.some((word) => word.length < 3)) {
+            toast.error("Each word must be at least 3 characters long");
+            setIsSaving(false);
+            return;
+        }
+
         try {
             const userId = user?._id
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/engineer/updateprofile/${userId}`, {
@@ -130,6 +151,7 @@ export const EngineerProfile = () => {
                         <div className="grid gap-2">
                             <Label>Name</Label>
                             <Input
+                                maxLength={50}
                                 disabled={!editable}
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}

@@ -132,14 +132,38 @@ const Signup = () => {
           <Input
             label="Name"
             type="text"
-            {...register("name", { required: "Name is required" })}
+            {...register("name", {
+              required: "Name is required",
+              minLength: {
+                value: 7,
+                message: "Name must be at least 7 characters"
+              },
+              maxLength: {
+                value: 50,
+                message: "Name must be at most 50 characters"
+              },
+              pattern: {
+                value: /^(?=.*\s)[a-zA-Z\s]{7,50}$/,
+                message: "Enter full name with at least one space and only letters"
+              }
+            })}
           />
           {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
 
           <Input
             label="Email"
             type="email"
-            {...register("email", { required: "Email is required" })}
+            {...register("email", {
+              required: "Email is required",
+              maxLength: {
+                value: 100,
+                message: "Email must be at most 100 characters long",
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9](?!.*\.\.)[a-zA-Z0-9._%+-]{0,62}[a-zA-Z0-9]@[a-zA-Z0-9.-]+\.(com|in|org|net|ac\.in)$/,
+                message: "Please enter a valid email address without consecutive dots"
+              }
+            })}
           />
           {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
 
@@ -215,7 +239,23 @@ const Signup = () => {
           <Input
             label="Password"
             type="password"
-            {...register("password", { required: "Password is required" })}
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters long",
+              },
+              maxLength: {
+                value: 32,
+                message: "Password must be at most 32 characters long",
+              },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{8,32}$/
+                ,
+                message:
+                  "Password must include uppercase, lowercase, number, special character, and no spaces",
+              },
+            })}
           />
           {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
 
