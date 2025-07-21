@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
-import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
 import loginUser from "../apiCall/loginUser";
 import toast from "react-hot-toast";
 import { useUser } from "../context/UseProvider";
 import { checkCookies } from "../apiCall/checkCookies";
 import { useEffect } from "react";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Button } from "../components/ui/button";
 
 type LoginFormData = {
     email: string;
@@ -74,14 +76,14 @@ const Login = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className="bg-white shadow-xl rounded-xl px-10 py-8 w-full max-w-md space-y-6 border border-gray-200"
             >
-                <h2 className="text-3xl font-bold text-center text-indigo-700">
+                <h2 className="text-3xl font-bold text-center text-black">
                     Login to your Account
                 </h2>
 
                 <div className="space-y-4">
-                    <div>
+                    <div className="grid gap-1">
+                        <Label htmlFor="email">Email</Label>
                         <Input
-                            label="Email"
                             type="email"
                             {...register("email", {
                                 required: "Email is required",
@@ -98,9 +100,9 @@ const Login = () => {
                         {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                     </div>
 
-                    <div>
+                    <div className="grid gap-1">
+                        <Label htmlFor="password">Password</Label>
                         <Input
-                            label="Password"
                             type="password"
                             {...register("password", {
                                 required: "Password is required",
@@ -128,32 +130,29 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={() => navigate("/signup")}
-                            className="font-medium text-indigo-600 mx-2 hover:underline"
+                            className="font-medium text-black mx-2 hover:underline"
                         >
                             Signup
                         </button>
                     </div>
 
-                    <button
-                        onClick={loginAsTestUser}
+                    <Button onClick={loginAsTestUser}
                         type="button"
-                        className="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition"
-                    >
+                        className="w-full">
                         Login as test user
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
                         type="submit"
-                        className="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition"
-                    >
+                        className="w-full">
                         Login
-                    </button>
+                    </Button>
 
                     <div className="text-sm text-right">
                         <button
                             type="button"
                             onClick={handleForgotPassword}
-                            className="text-indigo-600 hover:underline hover:text-indigo-800 transition"
+                            className="text-black font-medium hover:underline transition"
                         >
                             Forgot Password?
                         </button>
