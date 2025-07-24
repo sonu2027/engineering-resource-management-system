@@ -15,6 +15,7 @@ import { createProject } from "../apiCall/createProject";
 import toast from "react-hot-toast";
 import { fetchProjects } from "../apiCall/fetchProjects";
 import { editProject } from "../apiCall/editProject";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../components/ui/select";
 
 type FormData = {
   name: string;
@@ -138,6 +139,7 @@ export function CreateProjectModal({
           <DialogTitle>{project ? "Edit Project" : "Create New Project"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
           <div className="grid gap-1">
             <Label htmlFor="name">Project Name</Label>
             <Input id="name" {...register("name", {
@@ -154,9 +156,11 @@ export function CreateProjectModal({
             })} />
             {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
           </div>
+
           <div className="grid gap-1">
             <Label htmlFor="desc">Description</Label>
             <Textarea id="desc" {...register("description", {
+              required: "Description is required",
               maxLength: {
                 value: 300,
                 message: "Description must be at most 300 characters",
@@ -169,6 +173,7 @@ export function CreateProjectModal({
             },)} />
             {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-1">
               <Label htmlFor="start">Start Date</Label>
@@ -179,39 +184,52 @@ export function CreateProjectModal({
               <Input id="end" type="date" {...register("endDate", { required: true })} />
             </div>
           </div>
+
           <div className="grid gap-1">
             <Label>Required Skills</Label>
             <div className="grid grid-cols-2 gap-2">
               {skillOptions.map((skill) => (
-                <label key={skill} className="flex items-center gap-2 text-sm">
-                  <input
+                <Label key={skill} className="flex items-center gap-2 text-sm">
+                  <Input
                     type="checkbox"
                     value={skill}
-                    {...register("requiredSkills")}
-                    className="accent-primary h-4 w-4"
+                    {...register("requiredSkills", {
+                      validate: (selected) =>
+                        selected && selected.length > 0 || "Please select at least one skill",
+                    })}
+                    className={`accent-primary h-4 w-4`}
                   />
                   {skill}
-                </label>
+                </Label>
               ))}
             </div>
+            {errors.requiredSkills && (
+              <p className="text-sm text-red-500">{errors.requiredSkills.message as string}</p>
+            )}
           </div>
+
           <div className="grid gap-1">
             <Label htmlFor="team">Team Size</Label>
             <Input id="team" type="number" {...register("teamSize", { required: true })} />
           </div>
+
           <div className="grid gap-1">
             <Label htmlFor="status">Status</Label>
-            <select
-              id="status"
-              {...register("status", { required: true })}
-              className="w-full border rounded px-3 py-2 text-sm"
-              defaultValue="planning"
+            <Select
+              defaultValue="planning" // ⬅️ This ensures fallback without relying on state
+              onValueChange={(val) => setValue("status", val as FormData["status"])}
             >
-              <option value="planning">Planning</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-            </select>
+              <SelectTrigger id="status" className="w-full">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="planning">Planning</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+
           <Button type="submit" className="w-full">
             {project ? "Update Project" : "Create Project"}
           </Button>

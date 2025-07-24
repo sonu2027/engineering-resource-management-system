@@ -1,4 +1,6 @@
 import React from "react";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 
 type SignupFormData = {
   name: string;
@@ -65,13 +67,13 @@ const OTPModal = ({ isOpen, onClose, onSubmit, data }: OTPModalProps) => {
 
                 <div className="flex justify-center gap-3 mb-4">
                     {otp.map((digit, index) => (
-                        <input
+                        <Input
                             key={index}
                             ref={(el) => { inputsRef.current[index] = el }}
                             type="text"
                             maxLength={1}
                             inputMode="numeric"
-                            className="w-12 h-12 border border-gray-300 text-center text-lg rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-12 h-12 text-center"
                             value={digit}
                             onChange={(e) => handleChange(index, e.target.value)}
                             onKeyDown={(e) => handleKeyDown(index, e)}
@@ -79,12 +81,12 @@ const OTPModal = ({ isOpen, onClose, onSubmit, data }: OTPModalProps) => {
                     ))}
                 </div>
 
-                <button
+                <Button
                     onClick={handleSubmit}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition"
+                    className="w-full"
                 >
                     Submit OTP
-                </button>
+                </Button>
             </div>
         </div>
     );
