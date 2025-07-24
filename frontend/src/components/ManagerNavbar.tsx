@@ -11,7 +11,7 @@ export const ManagerNavbar = () => {
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
-        <nav className="bg-white border-b shadow-md fixed w-full z-20 top-0 left-0">
+        <nav className="bg-white border-b shadow-md sticky w-full z-20 top-0 left-0">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
                 <Link to="/home" className="text-xl font-semibold text-blue-600">
                     ManagerPanel
@@ -27,6 +27,9 @@ export const ManagerNavbar = () => {
                     <Link to="/dashboard" className="text-sm font-medium text-gray-700 hover:text-blue-600">
                         Dashboard
                     </Link>
+                    <Link to="/profile" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                        Profile
+                    </Link>
                     <FiLogOut onClick={() => setLogout(true)} className="text-sm font-medium text-gray-700 hover:text-blue-600" />
                 </div>
 
@@ -40,6 +43,7 @@ export const ManagerNavbar = () => {
                     <Link to="/home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home</Link>
                     <Link to="/engineer" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Engineers</Link>
                     <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Dashboard</Link>
+                    <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</Link>
                     <div onClick={() => setLogout(true)} className="px-4 py-2 hover:bg-gray-100">
                         <FiLogOut className="block text-gray-700" />
                     </div>

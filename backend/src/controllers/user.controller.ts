@@ -24,8 +24,8 @@ export const getEngineerById = async (req: Request, res: Response) => {
 
 
         const user = await UserModel.findById(userId).select("-password");
-        if (!user || user.role !== "engineer") {
-            res.status(404).json({ message: "Engineer not found" });
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
             return
         }
 
@@ -47,20 +47,31 @@ export const updateEngineerProfile = async (req: Request, res: Response) => {
 
         const { name, department, skills } = req.body;
 
-        const updatedUser = await UserModel.findByIdAndUpdate(
-            userId,
-            { name, department, skills },
-            { new: true, runValidators: true }
-        ).select("-password");
+        let updatedUser
 
-        if (!updatedUser || updatedUser.role !== "engineer") {
-            res.status(404).json({ message: "Engineer not found" });
+        if (department) {
+            updatedUser = await UserModel.findByIdAndUpdate(
+                userId,
+                { name, department, skills },
+                { new: true, runValidators: true }
+            ).select("-password");
+        }
+        else {
+            updatedUser = await UserModel.findByIdAndUpdate(
+                userId,
+                { name },
+                { new: true, runValidators: true }
+            ).select("-password");
+        }
+
+        if (!updatedUser) {
+            res.status(404).json({ message: "User not found" });
             return
         }
 
         res.status(200).json(updatedUser);
     } catch (err) {
-        console.error("Error updating engineer profile:", err);
+        console.error("Error updating profile:", err);
         res.status(500).json({ message: "Server error" });
     }
 };

@@ -5,7 +5,7 @@ import Home from './pages/Home'
 import { EngineerListPage } from './pages/EngineerListPage'
 import Dashboard from './pages/Dashboard'
 import { LandingPage } from './pages/LandingPage'
-import { EngineerProfile } from './pages/EngineerProfile'
+import { Profile } from './pages/Profile'
 import { ResetPassword } from './pages/ResetPassword'
 import ChangePassword from './pages/ChangePassword'
 
@@ -13,7 +13,7 @@ function Routing() {
     return (
         <Routes>
             <Route path='/' element={<LandingPage />} />
-            <Route path='/profile' element={< EngineerProfile />} />
+            <Route path='/profile' element={< Profile />} />
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/home' element={<Home />} />

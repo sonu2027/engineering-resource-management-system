@@ -8,6 +8,7 @@ import { useUser } from "../context/UseProvider";
 import { EngineerNavbar } from "../components/EngineerNavbar";
 import { useNavigate } from "react-router-dom";
 import { checkCookies } from "../apiCall/checkCookies";
+import { ManagerNavbar } from "../components/ManagerNavbar";
 
 const DEPARTMENTS = [
     "frontend",
@@ -31,7 +32,7 @@ const SKILLS = [
 ];
 
 
-export const EngineerProfile = () => {
+export const Profile = () => {
     const { user } = useUser();
     const [editable, setEditable] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -139,12 +140,14 @@ export const EngineerProfile = () => {
 
     return (
         <>
-            <EngineerNavbar />
+            {
+                user?.role === "engineer" ? <EngineerNavbar /> : <ManagerNavbar />
+            }
             <div className="w-full max-w-xl px-4 py-6 mx-auto">
                 <Card>
                     <CardHeader>
                         <h2 className="text-xl sm:text-2xl font-bold text-blue-600 text-center">
-                            Engineer Profile
+                            Profile
                         </h2>
                     </CardHeader>
                     <CardContent className="space-y-5">
@@ -161,58 +164,62 @@ export const EngineerProfile = () => {
                             <Label>Email</Label>
                             <Input disabled value={formData.email} />
                         </div>
-                        <div className="grid gap-2">
-                            <div className="grid gap-2">
+
+                        {
+                            user?.role === "engineer" && <div className="grid gap-2">
                                 <div className="grid gap-2">
-                                    <Label>Department</Label>
-                                    <div className="flex flex-wrap gap-3">
-                                        {DEPARTMENTS.map((dep) => (
-                                            <label key={dep} className="flex items-center gap-2">
+                                    <div className="grid gap-2">
+                                        <Label>Department</Label>
+                                        <div className="flex flex-wrap gap-3">
+                                            {DEPARTMENTS.map((dep) => (
+                                                <label key={dep} className="flex items-center gap-2">
+                                                    <input
+                                                        type="radio"
+                                                        name="department"
+                                                        disabled={!editable}
+                                                        checked={formData.department === dep}
+                                                        onChange={() => setFormData({ ...formData, department: dep })}
+                                                    />
+                                                    <span className="capitalize text-sm">{dep}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label>Skills</Label>
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                        {SKILLS.map((skill) => (
+                                            <label key={skill} className="flex items-center space-x-2">
                                                 <input
-                                                    type="radio"
-                                                    name="department"
+                                                    type="checkbox"
                                                     disabled={!editable}
-                                                    checked={formData.department === dep}
-                                                    onChange={() => setFormData({ ...formData, department: dep })}
+                                                    checked={formData.skills.includes(skill)}
+                                                    onChange={(e) => {
+                                                        const isChecked = e.target.checked;
+                                                        const updatedSkills = isChecked
+                                                            ? [...formData.skills, skill]
+                                                            : formData.skills.filter((s) => s !== skill);
+
+                                                        setFormData({ ...formData, skills: updatedSkills });
+                                                    }}
                                                 />
-                                                <span className="capitalize text-sm">{dep}</span>
+                                                <span className="text-sm">{skill}</span>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
-
                             </div>
+                        }
 
-                            <div className="grid gap-2">
-                                <Label>Skills</Label>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                    {SKILLS.map((skill) => (
-                                        <label key={skill} className="flex items-center space-x-2">
-                                            <input
-                                                type="checkbox"
-                                                disabled={!editable}
-                                                checked={formData.skills.includes(skill)}
-                                                onChange={(e) => {
-                                                    const isChecked = e.target.checked;
-                                                    const updatedSkills = isChecked
-                                                        ? [...formData.skills, skill]
-                                                        : formData.skills.filter((s) => s !== skill);
-
-                                                    setFormData({ ...formData, skills: updatedSkills });
-                                                }}
-                                            />
-                                            <span className="text-sm">{skill}</span>
-                                        </label>
-                                    ))}
-                                </div>
+                        {
+                            user?.role === "engineer" && <div className="grid gap-2">
+                                <Label>Available Capacity</Label>
+                                <Input disabled value={formData.availableCapacity} />
                             </div>
-
-
-                        </div>
-                        <div className="grid gap-2">
-                            <Label>Available Capacity</Label>
-                            <Input disabled value={formData.availableCapacity} />
-                        </div>
+                        }
 
                         <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
                             {!editable ? (
