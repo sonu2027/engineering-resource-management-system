@@ -4,6 +4,8 @@ import { Menu, X } from "lucide-react";
 import { FiLogOut } from "react-icons/fi";
 import LogoutModal from "../modals/LogoutModal";
 
+import { FiHome, FiUser, FiGrid, FiSettings } from "react-icons/fi";
+
 export const ManagerNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [logout, setLogout] = useState(false)
@@ -17,7 +19,7 @@ export const ManagerNavbar = () => {
                     ManagerPanel
                 </Link>
 
-                <div className="hidden md:flex gap-6 items-center">
+                <div className="hidden sm:flex gap-6 items-center">
                     <Link to="/home" className="text-sm font-medium text-gray-700 hover:text-blue-600">
                         Home
                     </Link>
@@ -33,19 +35,35 @@ export const ManagerNavbar = () => {
                     <FiLogOut onClick={() => setLogout(true)} className="text-sm font-medium text-gray-700 hover:text-blue-600" />
                 </div>
 
-                <button onClick={toggleMenu} className="md:hidden text-gray-700 focus:outline-none">
-                    {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                <button onClick={toggleMenu} className="sm:hidden text-gray-700 focus:outline-none">
+                    {!isOpen && <Menu className="w-6 h-6" />}
                 </button>
             </div>
 
             {isOpen && (
-                <div className="md:hidden bg-white shadow-md border-t">
-                    <Link to="/home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home</Link>
-                    <Link to="/engineer" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Engineers</Link>
-                    <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Dashboard</Link>
-                    <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</Link>
-                    <div onClick={() => setLogout(true)} className="px-4 py-2 hover:bg-gray-100">
-                        <FiLogOut className="block text-gray-700" />
+                <div className={`fixed inset-0 bg-black/40 backdrop-blur-xs z-50 ${isOpen ? "animate-in slide-in-from-left duration-500" : "hidden"} sm:hidden`}>
+                    <div className="w-[15rem] h-full bg-white shadow-lg border-r flex flex-col p-4 space-y-4 relative">
+                        <button onClick={toggleMenu} className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 transition">
+                            <X className="w-5 h-5" />
+                        </button>
+
+                        <nav className="mt-10 flex flex-col space-y-3 text-sm font-medium">
+                            <Link to="/home" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                                <FiHome className="w-4 h-4" /> Home
+                            </Link>
+                            <Link to="/engineer" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                                <FiUser className="w-4 h-4" /> Engineers
+                            </Link>
+                            <Link to="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                                <FiGrid className="w-4 h-4" /> Dashboard
+                            </Link>
+                            <Link to="/profile" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                                <FiSettings className="w-4 h-4" /> Profile
+                            </Link>
+                            <div onClick={() => setLogout(true)} className="flex items-center gap-2 px-4 py-2 rounded hover:bg-red-100 transition text-red-600 cursor-pointer mt-2">
+                                <FiLogOut className="w-4 h-4" /> Logout
+                            </div>
+                        </nav>
                     </div>
                 </div>
             )}
