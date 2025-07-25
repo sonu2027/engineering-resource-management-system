@@ -8,6 +8,7 @@ import { useUser } from "../context/UseProvider";
 import { ManagerNavbar } from "../components/ManagerNavbar";
 import { useNavigate } from "react-router-dom";
 import { checkCookies } from "../apiCall/checkCookies";
+import { Input } from "../components/ui/input";
 
 export const EngineerListPage = () => {
   const [engineers, setEngineers] = useState<any[]>([]);
@@ -57,19 +58,9 @@ export const EngineerListPage = () => {
   return (
     <div>
       <ManagerNavbar />
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search by skill (e.g., React)"
-          className="w-full px-3 py-2 border rounded text-sm"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
       <section className="p-6 space-y-6">
         <div className="mb-4">
-          <input
+          <Input
             type="text"
             placeholder="Search by skill (e.g., React)"
             className="w-full px-3 py-2 border rounded text-sm"

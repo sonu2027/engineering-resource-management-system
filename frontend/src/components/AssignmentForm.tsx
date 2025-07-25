@@ -5,6 +5,8 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import toast from "react-hot-toast";
 import checkSpacesForProject from "../apiCall/checkSpacesForProject";
+import { SelectItem, SelectValue, SelectContent, SelectTrigger, Select } from "./ui/select";
+import { Controller } from "react-hook-form";
 
 type FormProps = {
     engineerId: string;
@@ -13,7 +15,7 @@ type FormProps = {
 };
 
 export const AssignmentForm = ({ engineerId, projects, onAssigned }: FormProps) => {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
 
     const onSubmit = async (data: any) => {
 
@@ -48,35 +50,61 @@ export const AssignmentForm = ({ engineerId, projects, onAssigned }: FormProps) 
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 text-sm">
-            <div>
+
+            <div className="space-y-1">
                 <Label>Project</Label>
-                <select {...register("projectId")} className="w-full border rounded px-2 py-1">
-                    <option value="">Select a project</option>
-                    {projects.map((p) => (
-                        <option key={p._id} value={p._id}>
-                            {p.name}
-                        </option>
-                    ))}
-                </select>
+                <Controller
+                    control={control}
+                    name="projectId"
+                    rules={{ required: "Project selection is required" }}
+                    render={({ field }) => (
+                        <Select value={field.value} onValueChange={field.onChange}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a project" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {projects.map((p) => (
+                                    <SelectItem key={p._id} value={p._id}>
+                                        {p.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
+                />
+                {errors.projectId?.message && (
+                    <p className="text-sm text-red-500">{String(errors.projectId.message)}</p>
+                )}
             </div>
 
             <div>
                 <Label>Role</Label>
-                <Input {...register("role")} />
+                <Input {...register("role", { required: "Role is required" })} />
+                {errors.role && <p className="text-sm text-red-500">{String(errors.role.message)}</p>}
             </div>
+
 
             <div className="grid grid-cols-2 gap-2">
                 <div>
                     <Label>Allocation (%)</Label>
-                    <Input type="number" {...register("allocationPercentage")} />
+                    <Input type="number" {...register("allocationPercentage", {
+                        required: "Allocation is required",
+                    })} />
+                    {errors.allocationPercentage && (
+                        <p className="text-sm text-red-500">{String(errors.allocationPercentage.message)}</p>
+                    )}
                 </div>
+
                 <div>
                     <Label>Start Date</Label>
-                    <Input type="date" {...register("startDate")} />
+                    <Input type="date" {...register("startDate", { required: "Start date is required" })} />
+                    {errors.startDate && <p className="text-sm text-red-500">{String(errors.startDate.message)}</p>}
                 </div>
+
                 <div>
                     <Label>End Date</Label>
-                    <Input type="date" {...register("endDate")} />
+                    <Input type="date" {...register("endDate", { required: "End date is required" })} />
+                    {errors.endDate && <p className="text-sm text-red-500">{String(errors.endDate.message)}</p>}
                 </div>
             </div>
 
