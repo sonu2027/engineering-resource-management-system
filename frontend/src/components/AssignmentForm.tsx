@@ -34,7 +34,7 @@ export const AssignmentForm = ({ engineerId, projects, onAssigned }: FormProps) 
                     toast.error(response.message)
                     throw new Error("No space available");
                 }
-                createAssignment({ ...data, engineerId })
+                return createAssignment({ ...data, engineerId })
             })
             .then(() => {
                 toast.success("Engineer assigned!");
@@ -42,6 +42,7 @@ export const AssignmentForm = ({ engineerId, projects, onAssigned }: FormProps) 
                 onAssigned();
             })
             .catch((error) => {
+                toast.error(error.message)
                 if (error.message !== "No space available") {
                     toast.error("Assignment failed");
                 }

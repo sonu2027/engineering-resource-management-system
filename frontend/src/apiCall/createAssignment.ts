@@ -1,3 +1,4 @@
+
 type AssignmentPayload = {
     engineerId: string;
     projectId: string;
@@ -8,20 +9,28 @@ type AssignmentPayload = {
 };
 
 export const createAssignment = async (payload: AssignmentPayload) => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/assignments`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(payload),
-    });
+    try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/assignments`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(payload),
+        });
 
-    if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Failed to create assignment");
+        const responseData = await res.json();
+
+        if (res.status === 400) {
+            throw new Error(responseData.message || "Invalid request");
+        }
+
+        if (!res.ok) {
+            throw new Error(responseData.message || "Failed to create assignment");
+        }
+
+        return responseData.assignment;
+    } catch (error: any) {
+        throw new Error(error.message || "Something went wrong");
     }
-
-    const data = await res.json();
-    return data.assignment;
 };

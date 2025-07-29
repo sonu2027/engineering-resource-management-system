@@ -3,6 +3,7 @@ import UserModel from "../models/user.model";
 import ProjectModel from "../models/project.model";
 import { Request, Response } from "express";
 import { RequestHandler } from "express";
+import { log } from "console";
 
 export const createAssignment = async (req: Request, res: Response) => {
     const {
@@ -38,6 +39,7 @@ export const createAssignment = async (req: Request, res: Response) => {
         }
 
         const existingAssignment = await Assignment.findOne({ engineerId, projectId });
+        
         if (existingAssignment) {
             res
                 .status(400)
@@ -59,7 +61,6 @@ export const createAssignment = async (req: Request, res: Response) => {
 
         res.status(201).json({ assignment });
     } catch (err) {
-        console.error("Assignment creation failed:", err);
         res.status(500).json({ message: "Failed to create assignment" });
     }
 };
