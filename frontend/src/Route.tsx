@@ -8,6 +8,7 @@ import { LandingPage } from './pages/LandingPage'
 import { Profile } from './pages/Profile'
 import { ResetPassword } from './pages/ResetPassword'
 import ChangePassword from './pages/ChangePassword'
+import Message from './pages/Message.jsx'
 
 function Routing() {
     return (
@@ -21,6 +22,7 @@ function Routing() {
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/reset-password' element={<ResetPassword />} />
             <Route path='/change-password' element={<ChangePassword />} />
+            <Route path='/message' element={<Message />} />
         </Routes>
     )
 }

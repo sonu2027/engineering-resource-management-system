@@ -14,6 +14,19 @@ export const getAllEngineers = async (req: Request, res: Response) => {
     }
 };
 
+export const getAlluser = async (req: Request, res: Response) => {
+    try {
+        const users = await UserModel.find().select(
+            "_id name email"
+        );
+
+        res.status(200).json({ users });
+    } catch (err) {
+        console.error("Failed to fetch users:", err);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+
 export const getEngineerById = async (req: Request, res: Response) => {
     console.log("hello");
 

@@ -34,4 +34,7 @@ app.use("/api", userRouter);
 import assignmentRouter from "./routes/assignment.route";
 app.use("/api", assignmentRouter);
 
+import messageRouter from "./routes/message.route";
+app.use("/api", messageRouter);
+
 export default app;

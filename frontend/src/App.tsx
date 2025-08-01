@@ -1,8 +1,11 @@
 import Route from './Route'
+import { SocketProvider } from './customHooks/SocketProvider'
 
 function App() {
   return (
-    <Route />
+    <SocketProvider>
+      <Route />
+    </SocketProvider>
   )
 }
 

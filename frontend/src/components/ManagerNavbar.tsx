@@ -29,6 +29,9 @@ export const ManagerNavbar = () => {
                     <Link to="/dashboard" className="text-sm font-medium text-gray-700 hover:text-blue-600">
                         Dashboard
                     </Link>
+                    <Link to="/message" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                        Message
+                    </Link>
                     <Link to="/profile" className="text-sm font-medium text-gray-700 hover:text-blue-600">
                         Profile
                     </Link>

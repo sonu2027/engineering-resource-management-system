@@ -18,7 +18,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.0",
-    "nodemailer": "^7.0.3"
+    "nodemailer": "^7.0.3",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",
@@ -27,6 +28,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.3",
     "@types/nodemailer": "^6.4.17",
+    "@types/socket.io": "^3.0.1",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
