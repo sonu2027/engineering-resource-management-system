@@ -7,23 +7,32 @@ Track engineers, projects, assignments, and available capacity in one streamline
 - Frontend: <br>
   React + TypeScript <br>
   ShadCN UI + TailwindCSS <br>
-  React Hook Form, contextAPI
+  React Hook Form, contextAPI <br>
+  Socket.IO client for real-time chat
 
 - Backend: <br>
   Node.js + Express <br>
   MongoDB + Mongoose <br>
-  JWT Auth, REST APIs
+  JWT Auth, REST APIs <br>
+  Socket.IO server for bi-directional communication
 
 # Core Features
 
 - Auth with JWT + role-based access
 - Engineer dashboard: profile + assignments
 - Manager dashboard: team overview + project assign
+- Real-time chat feature with Socket.IO for engineers and managers
+
+# Features of Chat System (Currently working on that)
+- Engineers and Managers can send real-time messages to each other.
+- Implemented using Socket.IO with WebSockets fallback.
+- Supports instant delivery, typing indicators, and user presence tracking.
+- Integrated with authentication, so only logged-in users can chat.
 
 # Demo
 
-- Frontend: https://engineering-resource-management-system-frontend.vercel.app/
-- Backend API: https://engineering-resource-management-system-backend.vercel.app/
+- Frontend: https://engineering-resource-management-system-frontend.vercel.app
+- Backend API: https://engineering-resource-management-system-d0zr.onrender.com
 
 # Setup Instructions
 

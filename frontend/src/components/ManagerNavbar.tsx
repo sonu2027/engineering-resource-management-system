@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { FiLogOut } from "react-icons/fi";
 import LogoutModal from "../modals/LogoutModal";
 
-import { FiHome, FiUser, FiGrid, FiSettings } from "react-icons/fi";
+import { FiHome, FiUser, FiGrid, FiSettings, FiMessageSquare } from "react-icons/fi";
 
 export const ManagerNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -59,6 +59,9 @@ export const ManagerNavbar = () => {
                             </Link>
                             <Link to="/dashboard" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
                                 <FiGrid className="w-4 h-4" /> Dashboard
+                            </Link>
+                            <Link to="/message" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                                <FiMessageSquare className="w-4 h-4" /> Message
                             </Link>
                             <Link to="/profile" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
                                 <FiSettings className="w-4 h-4" /> Profile

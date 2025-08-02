@@ -5,6 +5,8 @@ import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/skeleton";
 import { useUser } from "../context/UseProvider";
 import { useSocket } from "../customHooks/SocketProvider";
+import OnGoingFeature from "../modals/OnGoingFeature";
+import { ManagerNavbar } from "../components/ManagerNavbar";
 
 interface User {
     _id: string;
@@ -28,7 +30,6 @@ interface Conversation {
 }
 
 function Message() {
-    // const [conversations, setConversations] = useState<User[]>([]);
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [allUsers, setAllUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -176,16 +177,31 @@ function Message() {
     }, []); // 👈 run only once
 
     return (
-        <div className="flex h-screen">
-            {/* Sidebar: Conversations */}
-            <div className="w-1/4 border-r p-4">
-                <h2 className="text-xl font-semibold mb-4">Chats</h2>
-                {conversations.length === 0 ? (
-                    <div>
-                        <p className="mb-2 text-muted-foreground">No messages yet. Start chatting with someone!</p>
-                        <Button onClick={handleShowAllUsers}>Show All Users</Button>
-                        <ScrollArea className="mt-4 h-[400px]">
-                            {allUsers.map(user => (
+        <div>
+            <ManagerNavbar />
+            <div className="flex h-screen">
+                {/* Sidebar: Conversations */}
+                <div className="w-1/4 border-r p-4">
+                    <h2 className="text-xl font-semibold mb-4">Chats</h2>
+                    {conversations.length === 0 ? (
+                        <div>
+                            <p className="mb-2 text-muted-foreground">No messages yet. Start chatting with someone!</p>
+                            <Button onClick={handleShowAllUsers}>Show All Users</Button>
+                            <ScrollArea className="mt-4 h-[400px]">
+                                {allUsers.map(user => (
+                                    <div
+                                        key={user._id}
+                                        className="p-2 cursor-pointer hover:bg-muted rounded"
+                                        onClick={() => handleSelectUser(user)}
+                                    >
+                                        {user.name}
+                                    </div>
+                                ))}
+                            </ScrollArea>
+                        </div>
+                    ) : (
+                        <ScrollArea className="h-[500px]">
+                            {conversations.map(user => (
                                 <div
                                     key={user._id}
                                     className="p-2 cursor-pointer hover:bg-muted rounded"
@@ -195,59 +211,48 @@ function Message() {
                                 </div>
                             ))}
                         </ScrollArea>
-                    </div>
-                ) : (
-                    <ScrollArea className="h-[500px]">
-                        {conversations.map(user => (
-                            <div
-                                key={user._id}
-                                className="p-2 cursor-pointer hover:bg-muted rounded"
-                                onClick={() => handleSelectUser(user)}
-                            >
-                                {user.name}
-                            </div>
-                        ))}
-                    </ScrollArea>
-                )}
-            </div>
+                    )}
+                </div>
 
-            {/* Chat Window */}
-            <div className="flex-1 flex flex-col justify-between p-4">
-                {selectedUser ? (
-                    <>
-                        <div className="mb-4">
-                            <h2 className="text-lg font-medium">Chat with {selectedUser.name}</h2>
-                            <ScrollArea className="h-[400px] border rounded p-2 mt-2">
-                                {messages.length === 0 ? (
-                                    <Skeleton className="h-6 w-full mt-4" />
-                                ) : (
-                                    messages.map((msg, idx) => (
-                                        <div
-                                            key={idx}
-                                            className={`mb-2 p-2 rounded ${msg.senderId === user?._id ? "bg-primary text-white text-right" : "bg-muted"
-                                                }`}
-                                        >
-                                            <p>{msg.content}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {new Date(msg.timestamp).toLocaleTimeString()}
-                                            </p>
-                                        </div>
-                                    ))
-                                )}
-                            </ScrollArea>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Input
-                                value={messageText}
-                                onChange={e => setMessageText(e.target.value)}
-                                placeholder="Type a message..."
-                            />
-                            <Button onClick={sendMessage}>Send</Button>
-                        </div>
-                    </>
-                ) : (
-                    <div className="text-muted-foreground">Select a user to start chatting</div>
-                )}
+                {/* Chat Window */}
+                <div className="flex-1 flex flex-col justify-between p-4">
+                    {selectedUser ? (
+                        <>
+                            <div className="mb-4">
+                                <h2 className="text-lg font-medium">Chat with {selectedUser.name}</h2>
+                                <ScrollArea className="h-[95%] rounded p-2 mt-2">
+                                    {messages.length === 0 ? (
+                                        <Skeleton className="h-6 w-full mt-4" />
+                                    ) : (
+                                        messages.map((msg, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`mb-2 p-2 rounded ${msg.senderId === user?._id ? "bg-slate-700 text-white text-right" : "bg-muted"
+                                                    }`}
+                                            >
+                                                <p>{msg.content}</p>
+                                                <p className="text-xs text-gray-300">
+                                                    {new Date(msg.timestamp).toLocaleTimeString()}
+                                                </p>
+                                            </div>
+                                        ))
+                                    )}
+                                </ScrollArea>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    value={messageText}
+                                    onChange={e => setMessageText(e.target.value)}
+                                    placeholder="Type a message..."
+                                />
+                                <Button onClick={sendMessage}>Send</Button>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="text-muted-foreground">Select a user to start chatting</div>
+                    )}
+                </div>
+                <OnGoingFeature />
             </div>
         </div>
     );
