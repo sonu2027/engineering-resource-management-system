@@ -223,8 +223,13 @@ exports.updatePassword = updatePassword;
 const logoutUser = (req, res) => {
     res.clearCookie("token", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        // For vercel F to vercel B
+        // secure: process.env.NODE_ENV === "production",
+        // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        // For vercel F to render B
+        secure: true, // login ke jaise
+        sameSite: "none", // login ke jaise
+        path: "/", // default path ensured
     });
     res.status(200).json({ success: true, message: "Logged out successfully." });
 };
