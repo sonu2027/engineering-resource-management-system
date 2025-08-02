@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const project_controller_1 = require("../controllers/project.controller");
+const verifyToken_middleware_1 = require("../middleware/verifyToken.middleware");
+const projectRouter = (0, express_1.Router)();
+projectRouter.route("/projects").post(verifyToken_middleware_1.verifyToken, project_controller_1.createProject);
+projectRouter.route("/projects").get(verifyToken_middleware_1.verifyToken, project_controller_1.fetchProjects);
+projectRouter.patch("/projects/:id", verifyToken_middleware_1.verifyToken, project_controller_1.updateProject);
+projectRouter.delete("/projects/:id", verifyToken_middleware_1.verifyToken, project_controller_1.deleteProject);
+projectRouter.get("/projects/:id/full", verifyToken_middleware_1.verifyToken, project_controller_1.getProjectWithAssignments);
+projectRouter.get("/analytics/assignment-timeline", verifyToken_middleware_1.verifyToken, project_controller_1.getAssignmentTimeline);
+projectRouter.get("/analytics/assignment-summary", verifyToken_middleware_1.verifyToken, project_controller_1.getAssignmentSummary);
+projectRouter.get("/analytics/team-load", verifyToken_middleware_1.verifyToken, project_controller_1.getTeamLoad);
+projectRouter.post("/checkspacesforproject", verifyToken_middleware_1.verifyToken, project_controller_1.checkSpaceForProject);
+exports.default = projectRouter;
