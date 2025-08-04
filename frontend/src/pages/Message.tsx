@@ -7,6 +7,9 @@ import { useUser } from "../context/UseProvider";
 import { useSocket } from "../customHooks/SocketProvider";
 import OnGoingFeature from "../modals/OnGoingFeature";
 import { ManagerNavbar } from "../components/ManagerNavbar";
+import { EngineerNavbar } from "../components/EngineerNavbar";
+import { FaPlus } from "react-icons/fa";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 interface User {
     _id: string;
@@ -35,6 +38,7 @@ function Message() {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageText, setMessageText] = useState("");
+    const [showUserList, setShowUserList] = useState(false);
 
     const { user } = useUser()
     const socket = useSocket();
@@ -53,102 +57,26 @@ function Message() {
                 });
 
                 const data = await res.json();
-                console.log("conversations data: ", data);
-
                 setConversations(data);
-
             } catch (error) {
                 console.error("Error fetching conversations:", error);
             }
         };
         fetchConversations();
-    }, []);
+    }, [user?._id]);
 
-
-    // ✅ Fetch all users for "start new chat"
-    const handleShowAllUsers = () => {
-        console.log("user data is : ", user);
-
-        fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
-            credentials: "include", // ✅ sends the cookie automatically
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log("users: ", data.users);
-
-                setAllUsers(data.users)
-            });
-    };
-
-
-    // ✅ Select user and fetch messages
-    const handleSelectUser = async (otherUser: User) => {
-        setSelectedUser(otherUser);
-
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/messages/user-messages`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                currentUserId: user?._id,
-                otherUserId: otherUser._id
-            })
-        });
-
-        const data = await res.json()
-        console.log("selecetd user data is: ", data);
-        setMessages(data)
-    };
-
-    const sendMessage = () => {
-        if (!messageText.trim() || !selectedUser || !user?._id || !socket) return;
-
-        const payload = {
-            senderId: user._id,
-            receiverId: selectedUser._id,
-            content: messageText,
-            timestamp: new Date().toISOString(),
-        };
-
-        socket.emit("send-message", payload); // ✅ no fetch here
-        setMessageText(""); // Reset input
-
-        // socket.on("receive-message", (msg) => {
-        //     console.log("💬 Received message:", msg);
-        //     setMessages((prev) => [...prev, msg]); // ✅ Add new message to chat list
-        // });
-
-    };
-
+    // Socket listener
     useEffect(() => {
-        if (!socket) return
+        console.log("socket listening");
 
-        const handleReceive = (msg: Message) => {
-            console.log("💬 Received message:", msg);
-            setMessages((prev) => [...prev, msg]);
-        };
+        if (!user?._id || !socket?.connected) return;
 
-        socket.on("receive-message", handleReceive);
-
-        return () => {
-            socket.off("receive-message", handleReceive); // cleanup when unmounting
-        };
-    }, [socket]);
-
-
-    // ✅ Socket listener
-    useEffect(() => {
-        if (!user?._id || !socket) return;
-
-        console.log("🔥 useEffect triggered");
+        console.log("socket listening");
 
         socket.emit("join", user._id);
 
         const handleReceive = (newMsg: Message) => {
             console.log("📩 message received:", newMsg);
-
             if (
                 selectedUser &&
                 (newMsg.senderId === selectedUser._id || newMsg.receiverId === selectedUser._id)
@@ -174,14 +102,93 @@ function Message() {
         return () => {
             socket.off("receive-message", handleReceive);
         };
-    }, []); // 👈 run only once
+    }, []);
+
+    useEffect(() => {
+        if (!socket) return
+
+        const handleReceive = (msg: Message) => {
+            console.log("Receiving message:", msg);
+            setMessages((prev) => [...prev, msg]);
+        };
+
+        socket.on("receive-message", handleReceive);
+
+        return () => {
+            socket.off("receive-message", handleReceive); // cleanup when unmounting
+        };
+    }, [socket]);
+
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleConnect = () => {
+            console.log("🔌 Reconnected:", socket.id);
+            socket.emit("join", user?._id); // ✅ Re-register user after refresh
+        };
+
+        socket.on("connect", handleConnect);
+
+        return () => {
+            socket.off("connect", handleConnect);
+        };
+    }, [socket, user?._id]);
+
+
+    // ✅ Fetch all users for "start new chat"
+    const handleShowAllUsers = () => {
+        fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
+            credentials: "include", // ✅ sends the cookie automatically
+        })
+            .then(res => res.json())
+            .then(data => {
+                setAllUsers(data.users)
+            });
+    };
+
+
+    // ✅ Select user and fetch messages
+    const handleSelectUser = async (otherUser: User) => {
+        setSelectedUser(otherUser);
+
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/messages/user-messages`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                currentUserId: user?._id,
+                otherUserId: otherUser._id
+            })
+        });
+
+        const data = await res.json()
+        setMessages(data)
+    };
+
+    const sendMessage = () => {
+        if (!messageText.trim() || !selectedUser || !user?._id || !socket) return;
+
+        const payload = {
+            senderId: user._id,
+            receiverId: selectedUser._id,
+            content: messageText,
+            timestamp: new Date().toISOString(),
+        };
+
+        socket.emit("send-message", payload); // ✅ no fetch here
+        setMessageText(""); // Reset input
+    };
 
     return (
         <div>
-            <ManagerNavbar />
+            {
+                user?.role === "manager" ? <ManagerNavbar /> : <EngineerNavbar />
+            }
             <div className="flex h-screen">
-                {/* Sidebar: Conversations */}
-                <div className="w-1/4 border-r p-4">
+                <div className="w-1/4 border-r p-4 overflow-y-auto">
                     <h2 className="text-xl font-semibold mb-4">Chats</h2>
                     {conversations.length === 0 ? (
                         <div>
@@ -214,13 +221,15 @@ function Message() {
                     )}
                 </div>
 
-                {/* Chat Window */}
-                <div className="flex-1 flex flex-col justify-between p-4">
+                <div className="flex-1 flex flex-col justify-between p-4 w-3/4 overflow-y-scroll">
                     {selectedUser ? (
                         <>
                             <div className="mb-4">
-                                <h2 className="text-lg font-medium">Chat with {selectedUser.name}</h2>
-                                <ScrollArea className="h-[95%] rounded p-2 mt-2">
+                                <div className="flex items-center gap-x-4 sticky top-0 z-10 bg-white">
+                                    <FaArrowLeftLong onClick={() => setSelectedUser(null)} />
+                                    <h2 className="text-lg font-medium">Chat with {selectedUser.name}</h2>
+                                </div>
+                                <ScrollArea className="h-[100%] rounded p-2 mt-2">
                                     {messages.length === 0 ? (
                                         <Skeleton className="h-6 w-full mt-4" />
                                     ) : (
@@ -239,22 +248,73 @@ function Message() {
                                     )}
                                 </ScrollArea>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Input
-                                    value={messageText}
-                                    onChange={e => setMessageText(e.target.value)}
-                                    placeholder="Type a message..."
-                                />
-                                <Button onClick={sendMessage}>Send</Button>
+
+                            <div className="flex justify-center items-center">
+                                <div className="flex items-center gap-2 fixed bottom-1 w-2/3">
+                                    <Input
+                                        className="bg-gray-700 text-gray-50"
+                                        value={messageText}
+                                        onChange={e => setMessageText(e.target.value)}
+                                        placeholder="Type a message..."
+                                    />
+                                    <Button onClick={sendMessage}>Send</Button>
+                                </div>
                             </div>
+
                         </>
                     ) : (
-                        <div className="text-muted-foreground">Select a user to start chatting</div>
+                        <div className="flex justify-center items-center h-full">
+                            <div className="text-muted-foreground">Select a user to start chatting</div>
+                            <div className="fixed bottom-3 right-4">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        handleShowAllUsers()
+                                        setShowUserList(true)
+                                        console.log("all users: ", allUsers);
+                                    }}
+                                    className="p-3 bg-muted rounded-full shadow hover:bg-muted/70"
+                                    title="Start New Chat"
+                                >
+                                    <FaPlus className="h-6 w-6 text-black dark:text-white" />
+                                </button>
+                            </div>
+                        </div>
                     )}
                 </div>
                 <OnGoingFeature />
+
+                {showUserList && (
+                    <div onClick={(e) => e.stopPropagation()} className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+                        <div className="relative bg-white dark:bg-slate-900 p-6 rounded-lg w-[300px] max-h-[400px] overflow-y-auto shadow-xl">
+
+                            <button
+                                onClick={() => setShowUserList(false)}
+                                className="absolute top-2 right-2 text-gray-600 dark:text-gray-300 hover:text-red-500"
+                                title="Close"
+                            >
+                                <span className="text-xl font-bold">×</span>
+                            </button>
+
+                            <h3 className="text-lg font-semibold mb-4">Start New Chat</h3>
+                            {allUsers.map(u => (
+                                <div
+                                    key={u._id}
+                                    className="p-2 rounded cursor-pointer hover:bg-muted"
+                                    onClick={() => {
+                                        handleSelectUser(u);
+                                        setShowUserList(false);
+                                    }}
+                                >
+                                    {u.name}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
             </div>
-        </div>
+        </div >
     );
 }
 

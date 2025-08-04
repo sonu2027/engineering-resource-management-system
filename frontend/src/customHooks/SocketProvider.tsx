@@ -10,7 +10,7 @@ import { io, Socket } from "socket.io-client";
 // 🧠 Create context
 const SocketContext = createContext<Socket | null>(null);
 
-// ✅ Fix 1: Proper typing for props
+// Fix 1: Proper typing for props
 interface SocketProviderProps {
     children: ReactNode;
 }
@@ -24,11 +24,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             withCredentials: true,
         });
 
-        console.log("socketInstance: ", socketInstance);
-        
+        setSocket(socketInstance)
 
-        setSocket(socketInstance); // if using useState
-        // OR socketRef.current = socketInstance;
+        socketInstance.on("connect", () => {
+            console.log("✅ Connected to socket:", socketInstance.id);
+        });
 
         return () => {
             socketInstance.disconnect(); // ✅ Proper cleanup
@@ -42,5 +42,5 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     );
 };
 
-// ⚡ Hook to consume socket
+// Hook to consume socket
 export const useSocket = () => useContext(SocketContext);

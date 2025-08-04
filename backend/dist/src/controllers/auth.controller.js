@@ -136,6 +136,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             httpOnly: true,
             secure: true,
             sameSite: "none",
+            path: "/",
             maxAge: 60 * 60 * 1000,
         })
             .status(200)

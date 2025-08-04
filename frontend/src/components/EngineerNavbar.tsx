@@ -4,10 +4,13 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { FiLogOut } from "react-icons/fi";
 import LogoutModal from "../modals/LogoutModal";
+import { FiHome, FiSettings, FiMessageSquare } from "react-icons/fi";
 
 export const EngineerNavbar = () => {
   const [open, setOpen] = useState(false);
   const [logout, setLogout] = useState(false)
+
+  const toggleMenu = () => setOpen(!open);
 
   return (
     <nav className="bg-white border-b shadow-sm sticky top-0 left-0 w-full z-50">
@@ -15,9 +18,12 @@ export const EngineerNavbar = () => {
         <Link to="/home" className="text-lg font-semibold text-blue-600">
           EngineerPanel
         </Link>
-        <div className="hidden md:flex gap-6 justify-center items-center">
+        <div className="hidden sm:flex gap-6 justify-center items-center">
           <Link to="/home">
             <Button variant="ghost">Home</Button>
+          </Link>
+          <Link to="/message" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+            Message
           </Link>
           <Link to="/profile">
             <Button variant="ghost">Profile</Button>
@@ -25,28 +31,38 @@ export const EngineerNavbar = () => {
           <FiLogOut onClick={() => setLogout(true)} className="font-medium text-gray-700 hover:bg-gray-100" />
         </div>
 
-        <div className="md:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setOpen(!open)}>
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
-        </div>
+        <button onClick={toggleMenu} className="sm:hidden text-gray-700 focus:outline-none">
+          {!open && <Menu className="w-6 h-6" />}
+        </button>
       </div>
 
       {open && (
-        <div className="md:hidden bg-white border-t shadow-sm px-4 py-2 space-y-1">
-          <Link to="/home" className="block w-full text-left">
-            <Button variant="ghost" className="w-full">Home</Button>
-          </Link>
-          <Link to="/profile" className="block w-full text-left">
-            <Button variant="ghost" className="w-full">Profile</Button>
-          </Link>
-          <div onClick={() => setLogout(true)} className="px-4 py-2 hover:bg-gray-100 flex justify-center items-center">
-            <FiLogOut className="block text-gray-700" />
+        <div className={`fixed inset-0 bg-black/40 backdrop-blur-xs z-50 ${open ? "animate-in slide-in-from-left duration-500" : "hidden"} sm:hidden`}>
+          <div className="w-[15rem] h-full bg-white shadow-lg border-r flex flex-col p-4 space-y-4 relative">
+            <button onClick={toggleMenu} className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 transition">
+              <X className="w-5 h-5" />
+            </button>
+
+            <nav className="mt-10 flex flex-col space-y-3 text-sm font-medium">
+              <Link to="/home" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                <FiHome className="w-4 h-4" /> Home
+              </Link>
+              <Link to="/message" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                <FiMessageSquare className="w-4 h-4" /> Message
+              </Link>
+              <Link to="/profile" className="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700">
+                <FiSettings className="w-4 h-4" /> Profile
+              </Link>
+              <div onClick={() => setLogout(true)} className="flex items-center gap-2 px-4 py-2 rounded hover:bg-red-100 transition text-red-600 cursor-pointer mt-2">
+                <FiLogOut className="w-4 h-4" /> Logout
+              </div>
+            </nav>
           </div>
         </div>
+
       )}
       {logout && (
-        <LogoutModal setLogout={setLogout}/>
+        <LogoutModal setLogout={setLogout} />
       )}
 
     </nav>

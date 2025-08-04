@@ -40,6 +40,7 @@ io.on("connection", (socket) => {
     socket.on("join", (userId) => {
         socket.data.userId = userId; // store userId in socket's memory
         onlineUsers[userId] = socket.id; // map userId to socket.id
+        console.log("onlineUsers: ", onlineUsers);
         console.log(`🟢 ${userId} is online with socket ID: ${socket.id}`);
         // Optionally notify other users:
         socket.broadcast.emit("user-online", userId);
@@ -59,11 +60,11 @@ io.on("connection", (socket) => {
             const receiverSocketId = onlineUsers[data.receiverId];
             const senderSocketId = onlineUsers[data.senderId];
             console.log("receiverSocketId", receiverSocketId, "and senderSocketId", senderSocketId);
-            if (receiverSocketId) {
-                io.to(receiverSocketId).emit("receive-message", savedMessage); // Send the saved message
-            }
             if (senderSocketId) {
                 io.to(senderSocketId).emit("receive-message", savedMessage); // ✅ This line updates sender UI
+            }
+            if (receiverSocketId != senderSocketId) {
+                io.to(receiverSocketId).emit("receive-message", savedMessage); // Send the saved message
             }
         }
         catch (err) {
