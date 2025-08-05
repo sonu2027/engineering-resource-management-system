@@ -4,7 +4,7 @@ import loginUser from "../apiCall/loginUser";
 import toast from "react-hot-toast";
 import { useUser } from "../context/UseProvider";
 import { checkCookies } from "../apiCall/checkCookies";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
@@ -17,6 +17,7 @@ type LoginFormData = {
 const Login = () => {
     const navigate = useNavigate();
     const { setUser } = useUser();
+    const [loader, setLoader] = useState<boolean>(false)
 
     const {
         register,
@@ -61,6 +62,7 @@ const Login = () => {
     }, [])
 
     const loginAsTestUser = () => {
+        setLoader(true)
         setValue("email", "manager@example.com");
         setValue("password", "Manager@1");
 
@@ -136,17 +138,38 @@ const Login = () => {
                         </button>
                     </div>
 
-                    <Button onClick={loginAsTestUser}
-                        type="button"
-                        className="w-full">
-                        Login as test user
-                    </Button>
-
-                    <Button
-                        type="submit"
-                        className="w-full">
-                        Login
-                    </Button>
+                    {loader ? (
+                        <div className="flex justify-center items-center h-12">
+                            <svg
+                                className="animate-spin h-6 w-6 text-gray-500"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                />
+                                <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v8z"
+                                />
+                            </svg>
+                        </div>
+                    ) : (
+                        <>
+                            <Button onClick={loginAsTestUser} type="button" className="w-full">
+                                Login as test user
+                            </Button>
+                            <Button type="submit" className="w-full">
+                                Login
+                            </Button>
+                        </>
+                    )}
 
                     <div className="text-sm text-right">
                         <button

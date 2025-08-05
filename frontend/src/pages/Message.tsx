@@ -115,7 +115,7 @@ function Message() {
         socket.on("receive-message", handleReceive);
 
         return () => {
-            socket.off("receive-message", handleReceive); // cleanup when unmounting
+            socket.off("receive-message", handleReceive); 
         };
     }, [socket]);
 
@@ -125,7 +125,7 @@ function Message() {
 
         const handleConnect = () => {
             console.log("🔌 Reconnected:", socket.id);
-            socket.emit("join", user?._id); // ✅ Re-register user after refresh
+            socket.emit("join", user?._id); // Re-register user after refresh
         };
 
         socket.on("connect", handleConnect);
@@ -136,10 +136,10 @@ function Message() {
     }, [socket, user?._id]);
 
 
-    // ✅ Fetch all users for "start new chat"
+    // Fetch all users for "start new chat"
     const handleShowAllUsers = () => {
         fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
-            credentials: "include", // ✅ sends the cookie automatically
+            credentials: "include", // sends the cookie automatically
         })
             .then(res => res.json())
             .then(data => {
@@ -148,7 +148,7 @@ function Message() {
     };
 
 
-    // ✅ Select user and fetch messages
+    // Select user and fetch messages
     const handleSelectUser = async (otherUser: User) => {
         setSelectedUser(otherUser);
 
@@ -178,8 +178,8 @@ function Message() {
             timestamp: new Date().toISOString(),
         };
 
-        socket.emit("send-message", payload); // ✅ no fetch here
-        setMessageText(""); // Reset input
+        socket.emit("send-message", payload); // no fetch here
+        setMessageText(""); 
     };
 
     return (
@@ -188,7 +188,7 @@ function Message() {
                 user?.role === "manager" ? <ManagerNavbar /> : <EngineerNavbar />
             }
             <div className="flex h-screen">
-                <div className="w-1/4 border-r p-4 overflow-y-auto">
+                <div className="w-1/4 border-r p-2 overflow-y-auto">
                     <h2 className="text-xl font-semibold mb-4">Chats</h2>
                     {conversations.length === 0 ? (
                         <div>
@@ -211,7 +211,7 @@ function Message() {
                             {conversations.map(user => (
                                 <div
                                     key={user._id}
-                                    className="p-2 cursor-pointer hover:bg-muted rounded"
+                                    className="px-[2px] py-[6px] sm:text-xl cursor-pointer hover:bg-muted rounded"
                                     onClick={() => handleSelectUser(user)}
                                 >
                                     {user.name}
@@ -236,11 +236,11 @@ function Message() {
                                         messages.map((msg, idx) => (
                                             <div
                                                 key={idx}
-                                                className={`mb-2 p-2 rounded ${msg.senderId === user?._id ? "bg-slate-700 text-white text-right" : "bg-muted"
+                                                className={`mb-2 p-2 rounded ${msg.senderId === user?._id ? "bg-slate-700 text-white text-right" : "bg-gray-100"
                                                     }`}
                                             >
                                                 <p>{msg.content}</p>
-                                                <p className="text-xs text-gray-300">
+                                                <p className={`text-xs ${msg.senderId === user?._id ? "text-gray-300" : "text-gray-500"}`}>
                                                     {new Date(msg.timestamp).toLocaleTimeString()}
                                                 </p>
                                             </div>
