@@ -6,6 +6,12 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import MessageModel from './src/models/message.model';
 import mongoose from 'mongoose';
+import { uploadOnCloudinary } from "./src/utils/cloudinary";
+
+interface UploadResult {
+  url: string;
+  public_id: string;
+}
 
 dotenv.config({ path: "./.env" });
 
@@ -20,6 +26,7 @@ const io = new Server(httpServer, {
     origin: process.env.CORS_ORIGIN,
     credentials: true,
   },
+  maxHttpBufferSize: 20e6, // Allowing payloads (Images size) up to 20MB
 });
 
 const onlineUsers: Record<string, string> = {};
@@ -28,45 +35,70 @@ const onlineUsers: Record<string, string> = {};
 io.on("connection", (socket) => {
   console.log(`✅ User connected: ${socket.id}`);
 
-  // 📌 JOIN logic here
+  // JOINING logic here
   socket.on("join", (userId: string) => {
-    socket.data.userId = userId; // store userId in socket's memory
-    onlineUsers[userId] = socket.id; // map userId to socket.id
+    socket.data.userId = userId; // storing userId in socket's memory
+    onlineUsers[userId] = socket.id; // maping userId to socket.id
 
     console.log("onlineUsers: ", onlineUsers);
 
 
     console.log(`🟢 ${userId} is online with socket ID: ${socket.id}`);
 
-    // Optionally notify other users:
+    // Optionally I will notify other users in future:
     socket.broadcast.emit("user-online", userId);
   });
 
-  // 📩 Message receive
+  // Message receive
   socket.on("send-message", async (data) => {
     console.log("📬 Received message:", data);
 
     try {
-      // ✅ Save to MongoDB
-      const savedMessage = await MessageModel.create({
-        senderId: new mongoose.Types.ObjectId(data.senderId as string),
-        receiverId: new mongoose.Types.ObjectId(data.receiverId as string),
-        content: data.content,
-        timestamp: new Date(data.timestamp),
-      });
+      if (!data.senderId || !mongoose.Types.ObjectId.isValid(data.senderId)) {
+        throw new Error(`Invalid senderId: ${data.senderId}`);
+      }
+      if (!data.receiverId || !mongoose.Types.ObjectId.isValid(data.receiverId)) {
+        throw new Error(`Invalid receiverId: ${data.receiverId}`);
+      }
 
-      // ✅ Emit to receiver
+      const messageData: any = {
+        senderId: new mongoose.Types.ObjectId(data.senderId),
+        receiverId: new mongoose.Types.ObjectId(data.receiverId),
+        timestamp: new Date(data.timestamp),
+      };
+
+      if (data.content) {
+        messageData.content = data.content;
+      }
+
+      if (data.fileUrl) {
+        const imageBuffer = Buffer.from(
+          data.fileUrl.replace(/^data:.+;base64,/, ""),
+          "base64"
+        );
+        const response = await uploadOnCloudinary(
+          imageBuffer,
+          `${Date.now()}_${data.fileName}`
+        );
+
+        messageData.fileUrl = response.url;
+        messageData.filePublicId = response.public_id;
+        messageData.fileType = data.fileType || null;
+        messageData.fileName = data.fileName || null;
+      }
+
+      const savedMessage = await MessageModel.create(messageData);
+      console.log("savedMessage: ", savedMessage);
+
+
       const receiverSocketId = onlineUsers[data.receiverId];
       const senderSocketId = onlineUsers[data.senderId];
 
-      console.log("receiverSocketId", receiverSocketId, "and senderSocketId", senderSocketId);
-
       if (senderSocketId) {
-        io.to(senderSocketId).emit("receive-message", savedMessage); // ✅ This line updates sender UI
+        io.to(senderSocketId).emit("receive-message", savedMessage);
       }
-
-      if (receiverSocketId!=senderSocketId) {
-        io.to(receiverSocketId).emit("receive-message", savedMessage); // Send the saved message
+      if (receiverSocketId && receiverSocketId !== senderSocketId) {
+        io.to(receiverSocketId).emit("receive-message", savedMessage);
       }
 
     } catch (err) {
@@ -75,7 +107,9 @@ io.on("connection", (socket) => {
   });
 
 
-  // ❌ Disconnect handler
+
+
+  // Disconnect handler
   socket.on("disconnect", () => {
     try {
       const userId = socket.data.userId;

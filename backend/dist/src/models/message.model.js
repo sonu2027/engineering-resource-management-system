@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// models/Message.ts
 const mongoose_1 = __importDefault(require("mongoose"));
 const messageSchema = new mongoose_1.default.Schema({
     senderId: {
@@ -18,8 +17,17 @@ const messageSchema = new mongoose_1.default.Schema({
     },
     content: {
         type: String,
-        required: true,
+        required: false,
     },
+    fileUrl: {
+        type: String, // store binary image
+        required: false,
+    },
+    filePublicId: {
+        type: String,
+    },
+    fileType: { type: String }, // image/jpeg, video/mp4, etc.
+    fileName: { type: String },
     timestamp: {
         type: Date,
         default: Date.now,

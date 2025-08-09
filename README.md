@@ -1,6 +1,6 @@
 # Engineering Resource Management System
 
-Track engineers, projects, assignments, and available capacity in one streamlined full-stack app.
+Track engineers, projects, assignments, and available capacity in one streamlined full-stack app with chat feature included.
 
 # Tech Stack
 

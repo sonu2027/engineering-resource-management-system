@@ -1,4 +1,3 @@
-// models/Message.ts
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema(
@@ -15,8 +14,17 @@ const messageSchema = new mongoose.Schema(
         },
         content: {
             type: String,
-            required: true,
+            required: false,
         },
+        fileUrl: {
+            type: String, // store binary image
+            required: false,
+        },
+        filePublicId: {
+            type: String,
+        },
+        fileType: { type: String }, // image/jpeg, video/mp4, etc.
+        fileName: { type: String },
         timestamp: {
             type: Date,
             default: Date.now,

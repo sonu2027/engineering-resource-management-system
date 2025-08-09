@@ -54,7 +54,10 @@ export const EngineerNavbar = () => {
               <Link to="/profile" className={`flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100 transition text-gray-700 ${location.pathname === "/profile" ? "text-gray-900 font-medium" : "text-gray-700"}`}>
                 <FiSettings className="w-4 h-4" /> Profile
               </Link>
-              <div onClick={() => setLogout(true)} className="flex items-center gap-2 px-4 py-2 rounded hover:bg-red-100 transition text-red-600 cursor-pointer mt-2">
+              <div onClick={() => {
+                setOpen(false)
+                setLogout(true)
+              }} className="flex items-center gap-2 px-4 py-2 rounded hover:bg-red-100 transition text-red-600 cursor-pointer mt-2">
                 <FiLogOut className="w-4 h-4" /> Logout
               </div>
             </nav>

@@ -20,6 +20,7 @@ const http_1 = require("http");
 const socket_io_1 = require("socket.io");
 const message_model_1 = __importDefault(require("./src/models/message.model"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const cloudinary_1 = require("./src/utils/cloudinary");
 dotenv_1.default.config({ path: "./.env" });
 const port = process.env.PORT || 7000;
 // ✅ HTTP server create (Express app ke sath)
@@ -30,48 +31,64 @@ const io = new socket_io_1.Server(httpServer, {
         origin: process.env.CORS_ORIGIN,
         credentials: true,
     },
+    maxHttpBufferSize: 20e6, // Allowing payloads (Images size) up to 20MB
 });
 exports.io = io;
 const onlineUsers = {};
 // ✅ Socket.IO events
 io.on("connection", (socket) => {
     console.log(`✅ User connected: ${socket.id}`);
-    // 📌 JOIN logic here
+    // JOINING logic here
     socket.on("join", (userId) => {
-        socket.data.userId = userId; // store userId in socket's memory
-        onlineUsers[userId] = socket.id; // map userId to socket.id
+        socket.data.userId = userId; // storing userId in socket's memory
+        onlineUsers[userId] = socket.id; // maping userId to socket.id
         console.log("onlineUsers: ", onlineUsers);
         console.log(`🟢 ${userId} is online with socket ID: ${socket.id}`);
-        // Optionally notify other users:
+        // Optionally I will notify other users in future:
         socket.broadcast.emit("user-online", userId);
     });
-    // 📩 Message receive
+    // Message receive
     socket.on("send-message", (data) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("📬 Received message:", data);
         try {
-            // ✅ Save to MongoDB
-            const savedMessage = yield message_model_1.default.create({
+            if (!data.senderId || !mongoose_1.default.Types.ObjectId.isValid(data.senderId)) {
+                throw new Error(`Invalid senderId: ${data.senderId}`);
+            }
+            if (!data.receiverId || !mongoose_1.default.Types.ObjectId.isValid(data.receiverId)) {
+                throw new Error(`Invalid receiverId: ${data.receiverId}`);
+            }
+            const messageData = {
                 senderId: new mongoose_1.default.Types.ObjectId(data.senderId),
                 receiverId: new mongoose_1.default.Types.ObjectId(data.receiverId),
-                content: data.content,
                 timestamp: new Date(data.timestamp),
-            });
-            // ✅ Emit to receiver
+            };
+            if (data.content) {
+                messageData.content = data.content;
+            }
+            if (data.fileUrl) {
+                const imageBuffer = Buffer.from(data.fileUrl.replace(/^data:.+;base64,/, ""), "base64");
+                const response = yield (0, cloudinary_1.uploadOnCloudinary)(imageBuffer, `${Date.now()}_${data.fileName}`);
+                messageData.fileUrl = response.url;
+                messageData.filePublicId = response.public_id;
+                messageData.fileType = data.fileType || null;
+                messageData.fileName = data.fileName || null;
+            }
+            const savedMessage = yield message_model_1.default.create(messageData);
+            console.log("savedMessage: ", savedMessage);
             const receiverSocketId = onlineUsers[data.receiverId];
             const senderSocketId = onlineUsers[data.senderId];
-            console.log("receiverSocketId", receiverSocketId, "and senderSocketId", senderSocketId);
             if (senderSocketId) {
-                io.to(senderSocketId).emit("receive-message", savedMessage); // ✅ This line updates sender UI
+                io.to(senderSocketId).emit("receive-message", savedMessage);
             }
-            if (receiverSocketId != senderSocketId) {
-                io.to(receiverSocketId).emit("receive-message", savedMessage); // Send the saved message
+            if (receiverSocketId && receiverSocketId !== senderSocketId) {
+                io.to(receiverSocketId).emit("receive-message", savedMessage);
             }
         }
         catch (err) {
             console.error("❌ Message save failed:", err);
         }
     }));
-    // ❌ Disconnect handler
+    // Disconnect handler
     socket.on("disconnect", () => {
         try {
             const userId = socket.data.userId;
