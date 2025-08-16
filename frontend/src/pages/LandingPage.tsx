@@ -4,26 +4,30 @@ import { Card, CardContent } from "../components/ui/card";
 import { Separator } from "../components/ui/seprator";
 import { checkCookies } from "../apiCall/checkCookies";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import AllowThirdPartyCookies from "../modals/AllowThirdPartyCookies";
 
 export const LandingPage = () => {
 
+  const [showModal, setShowModal] = useState(true);
+
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-      checkCookies()
-          .then((res) => {
-              if (res.success) {
-                  navigate("/home");
-              }
-          })
-          .catch((error) => {
-              console.log("error in home: ", error);
-          })
+    checkCookies()
+      .then((res) => {
+        if (res.success) {
+          navigate("/home");
+        }
+      })
+      .catch((error) => {
+        console.log("error in home: ", error);
+      })
   }, [])
-  
+
 
   return (
+
     <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-blue-50 to-white">
       <Card className="w-full max-w-xl shadow-md border border-gray-200">
         <CardContent className="p-8 text-center space-y-6">
@@ -48,10 +52,14 @@ export const LandingPage = () => {
           <Separator />
 
           <p className="text-sm text-muted-foreground">
-            Built by Sonu 🚀 | Designed with ShadCN ✨
+            Built by Sonu  | Designed with ShadCN 
           </p>
         </CardContent>
       </Card>
+      <AllowThirdPartyCookies
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   );
 };
