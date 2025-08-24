@@ -8,7 +8,6 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyToken = (req, res, next) => {
     var _a;
     const token = ((_a = req.header("Authorization")) === null || _a === void 0 ? void 0 : _a.split(" ")[1]) || req.cookies.token;
-    console.log("Token: ", token);
     if (!token) {
         res.status(403).json({ message: "Access Denied" });
         return;

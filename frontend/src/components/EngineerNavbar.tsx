@@ -17,7 +17,7 @@ export const EngineerNavbar = () => {
     <nav className="bg-white border-b shadow-sm sticky top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link to="/home" className="text-lg font-semibold text-blue-600">
-          EngineerPanel
+          <img className="w-20 overflow-hidden" src="webLogoWithoutBG.png" alt="" />
         </Link>
         <div className="hidden sm:flex gap-6 justify-center items-center">
           <Link className={`hover:text-blue-600 font-medium ${location.pathname === "/home" ? "text-gray-900" : "text-gray-700"}`} to="/home">

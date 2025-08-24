@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { Card, CardContent } from "../components/ui/card";
 import { Label } from "../components/ui/label";
 import { toast } from "react-hot-toast";
 import { useUser } from "../context/UseProvider";
@@ -145,11 +145,6 @@ export const Profile = () => {
             }
             <div className="w-full max-w-xl px-4 py-6 mx-auto">
                 <Card>
-                    <CardHeader>
-                        <h2 className="text-xl sm:text-2xl font-bold text-blue-600 text-center">
-                            Profile
-                        </h2>
-                    </CardHeader>
                     <CardContent className="space-y-5">
                         <div className="grid gap-2">
                             <Label>Name</Label>

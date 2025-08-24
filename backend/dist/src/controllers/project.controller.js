@@ -88,11 +88,16 @@ exports.updateProject = updateProject;
 const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const deleted = yield project_model_1.default.findByIdAndDelete(id);
-        if (!deleted) {
+        const deletedProject = yield project_model_1.default.findByIdAndDelete(id);
+        if (!deletedProject) {
             res.status(404).json({ message: "Project not found" });
         }
-        res.status(200).json({ message: "Project deleted successfully", deleted });
+        const deletedAssignment = yield assignment_model_1.default.deleteMany({ projectId: id });
+        console.log("deleted assignment: ", deletedAssignment);
+        res.status(200).json({
+            message: "Project and related assignments deleted successfully",
+            deletedProject,
+        });
     }
     catch (err) {
         console.error("Delete error:", err);

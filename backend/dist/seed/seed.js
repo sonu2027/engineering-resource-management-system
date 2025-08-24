@@ -16,6 +16,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../src/models/user.model"));
 const project_model_1 = __importDefault(require("../src/models/project.model"));
 const assignment_model_1 = __importDefault(require("../src/models/assignment.model"));
+const message_model_1 = __importDefault(require("../src/models/message.model"));
 const connectDB_1 = __importDefault(require("../src/connectDB"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 // To run this file: npx ts-node seed.ts
@@ -26,6 +27,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
         yield user_model_1.default.deleteMany({});
         yield project_model_1.default.deleteMany({});
         yield assignment_model_1.default.deleteMany({});
+        yield message_model_1.default.deleteMany({});
         //  Engineers
         const engineers = yield user_model_1.default.insertMany([
             {

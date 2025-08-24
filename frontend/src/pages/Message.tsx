@@ -251,6 +251,15 @@ function Message() {
         }
     };
 
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
 
     return (
@@ -266,13 +275,6 @@ function Message() {
                                 allUsers.length > 0 ?
                                     <ScrollArea className="mt-4 h-[400px]">
                                         {allUsers.map((user, index) => (
-                                            // <div
-                                            //     key={user._id}
-                                            //     className="p-2 cursor-pointer hover:bg-muted rounded"
-                                            //     onClick={() => handleSelectUser(user)}
-                                            // >
-                                            //     {user.name}
-                                            // </div>
                                             <div
                                                 key={user._id}
                                                 onClick={() => handleSelectUser(user)}
@@ -390,9 +392,9 @@ function Message() {
                                                 );
                                             })
                                         )}
+                                        <div ref={messagesEndRef} />
                                     </ScrollArea>
                                 </div>
-
                             }
 
                             {

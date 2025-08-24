@@ -5,6 +5,7 @@ import UserModel from "../models/user.model";
 import ProjectModel from "../models/project.model";
 import { IUser } from "../models/user.model";
 import { IProject } from "../models/project.model";
+import { deleteAssignment } from "./assignment.controller";
 
 const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -91,13 +92,19 @@ const updateProject = async (req: Request, res: Response) => {
 
 const deleteProject = async (req: Request, res: Response) => {
   const { id } = req.params;
-
+  
   try {
-    const deleted = await Project.findByIdAndDelete(id);
-    if (!deleted) {
+    const deletedProject = await Project.findByIdAndDelete(id);
+    if (!deletedProject) {
       res.status(404).json({ message: "Project not found" });
     }
-    res.status(200).json({ message: "Project deleted successfully", deleted });
+    const deletedAssignment=await Assignment.deleteMany({ projectId: id });
+    console.log("deleted assignment: ", deletedAssignment);
+    
+    res.status(200).json({
+      message: "Project and related assignments deleted successfully",
+      deletedProject,
+    });
   } catch (err) {
     console.error("Delete error:", err);
     res.status(500).json({ message: "Failed to delete project" });

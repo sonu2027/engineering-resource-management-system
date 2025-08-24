@@ -19,7 +19,7 @@ export const ManagerNavbar = () => {
         <nav className="bg-white border-b shadow-md sticky w-full z-20 top-0 left-0">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
                 <Link to="/home" className="text-xl font-semibold text-blue-600">
-                    ManagerPanel
+                    <img className="w-20 overflow-hidden" src="webLogoWithoutBG.png" alt="" />
                 </Link>
 
                 <div className="hidden sm:flex gap-6 items-center">

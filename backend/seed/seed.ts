@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import User from "../src/models/user.model";
 import Project from "../src/models/project.model";
 import Assignment from "../src/models/assignment.model";
+import messageModel from "../src/models/message.model";
 import connectDB from "../src/connectDB";
 import bcrypt from "bcryptjs"
 
@@ -12,10 +13,11 @@ import bcrypt from "bcryptjs"
         await connectDB();
 
         // You can comment out if you need fresh data in database every single time you run this seed.js
-        
+
         await User.deleteMany({});
         await Project.deleteMany({});
         await Assignment.deleteMany({});
+        await messageModel.deleteMany({})
 
         //  Engineers
         const engineers = await User.insertMany([

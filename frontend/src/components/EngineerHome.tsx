@@ -53,7 +53,7 @@ function EngineerHome() {
                     {assignments.map((a) => (
                         <div onClick={() => handleSelect(a.projectId._id)} key={a._id} className="border p-3 rounded-md shadow-sm cursor-pointer hover:bg-muted">
                             <div className="flex justify-between">
-                                <span className="font-medium">{a.projectId.name}</span>
+                                <span className="font-medium">{a.projectId?.name}</span>
                                 <span className="text-xs text-muted-foreground">{a.role} ({a.allocationPercentage}%)</span>
                             </div>
                             <p className="text-sm text-muted-foreground">
