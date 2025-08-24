@@ -27,6 +27,7 @@ const Login = () => {
     } = useForm<LoginFormData>();
 
     const onSubmit = async (data: LoginFormData) => {
+        setLoader(true)
         loginUser(data.email, data.password)
             .then((res) => {
                 if (res.message === "Email not found")
@@ -37,8 +38,10 @@ const Login = () => {
                     setUser(res.user);
                     navigate("/home")
                 }
+                setLoader(false)
             })
             .catch((error) => {
+                setLoader(false)
                 console.log("error: ", error);
                 toast.error("Internal server error")
             })
