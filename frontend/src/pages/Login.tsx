@@ -27,6 +27,10 @@ const Login = () => {
     } = useForm<LoginFormData>();
 
     const onSubmit = async (data: LoginFormData) => {
+        toast.loading("Please wait, it can take upto 2 min", { id: "login" });
+        setTimeout(() => {
+            toast.dismiss("login");
+        }, 2000);
         setLoader(true)
         loginUser(data.email, data.password)
             .then((res) => {
@@ -39,11 +43,13 @@ const Login = () => {
                     navigate("/home")
                 }
                 setLoader(false)
+                toast.dismiss("login");
             })
             .catch((error) => {
                 setLoader(false)
                 console.log("error: ", error);
                 toast.error("Internal server error")
+                toast.dismiss("login");
             })
     };
 
